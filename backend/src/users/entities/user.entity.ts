@@ -1,7 +1,7 @@
 export class User {
   id: number;
-  name:string;
+  name: string;
   age: number;
-  position:string;
+  position: string;
   skills: string[];
 }
