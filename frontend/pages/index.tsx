@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 const inter = Inter({ subsets: ['latin'] })
 
 const fetchUser = async () => {
-  const BASE_URL = 'http://localhost:8000'
+  const BASE_URL = 'https://k8a801.p.ssafy.io/api'
   const response = await fetch(BASE_URL+'/users/1', {
     method: 'GET',
   })
