@@ -6,8 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, new ExpressAdapter());
   
   app.enableCors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    origin: ['http://localhost:3000', 'https://k8a801.p.ssafy.io/'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'Authorization'],
     credentials: true,
   });
