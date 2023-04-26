@@ -42,5 +42,5 @@ export default function Home() {
     <button>네이버 로그인</button>
     <button>깃허브 로그인</button>
     </>
-  );
+   );
 }
