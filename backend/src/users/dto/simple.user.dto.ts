@@ -49,4 +49,8 @@ export class SimpleUserDto {
   @IsOptional()
   @IsString()
   introduce: string;
+
+  @IsNotEmpty()
+  @IsString()
+  refreshToken: string;
 }

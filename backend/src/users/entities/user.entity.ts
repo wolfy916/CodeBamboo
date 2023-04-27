@@ -39,4 +39,7 @@ export class User {
 
   @Column({ nullable: true })
   introduce: string;
+
+  @Column()
+  refreshToken: string;
 }
