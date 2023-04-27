@@ -16,15 +16,13 @@ export class User {
   @Column()
   username: string;
 
-  @Column({
-    nullable: true,
-  })
+  @Column({ nullable: true })
   email: string;
 
   @Column()
   nickname: string;
 
-  @Column()
+  @Column({ nullable: true })
   image: string;
 
   @Column()
@@ -39,6 +37,6 @@ export class User {
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   introduce: string;
 }

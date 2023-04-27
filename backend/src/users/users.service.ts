@@ -1,6 +1,9 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
+import { CreateUserDto } from './dto/create.user.dto';
+import { UpdateUserDto } from './dto/update.user.dto';
+import { SimpleUserDto } from './dto/simple.user.dto';
 
 @Injectable()
 export class UsersService {
@@ -9,32 +12,49 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  async getAll(): Promise<User[]> {
+  async getAll(): Promise<SimpleUserDto[]> {
     return this.userRepository.find();
   }
 
-  async getOne(id: number): Promise<User> {
-    return this.userRepository.findOne({ where: { user_id: id } });
+  async search(userInput: string): Promise<SimpleUserDto[]> {
+    const users = await this.userRepository.find({
+      where: { nickname: Like(`%${userInput}%`) },
+    });
+    if (!users) {
+      throw new NotFoundException(`user nickname ${userInput} not found`);
+    }
+    return users;
   }
 
-  async create(user: User): Promise<void> {
-    await this.userRepository.save(user);
+  async getOne(id: number): Promise<SimpleUserDto> {
+    const user = await this.userRepository.findOne({ where: { user_id: id } });
+    if (!user) {
+      throw new NotFoundException(`user id ${id} not found`);
+    }
+    return user;
+  }
+
+  async create(createUserdto: CreateUserDto): Promise<void> {
+    await this.userRepository.save(createUserdto);
   }
 
   async deleteOne(id: number): Promise<void> {
-    await this.userRepository.delete(id);
+    const simpleUserDto = await this.getOne(id);
+    if (simpleUserDto) {
+      await this.userRepository.delete(id);
+    }
   }
 
-  async update(id: number, user: User): Promise<void> {
-    const existedUser = await this.getOne(id);
-    if (existedUser) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
+    const simpleUserDto = await this.getOne(id);
+    if (simpleUserDto) {
       await this.userRepository
         .createQueryBuilder()
         .update(User)
         .set({
-          nickname: user.nickname,
-          image: user.image,
-          introduce: user.introduce,
+          nickname: updateUserDto.nickname,
+          image: updateUserDto.image,
+          introduce: updateUserDto.introduce,
         })
         .where('user_id = :id', { id })
         .execute();

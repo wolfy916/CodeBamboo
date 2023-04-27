@@ -8,31 +8,33 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
+import { SimpleUserDto } from './dto/simple.user.dto';
+import { CreateUserDto } from './dto/create.user.dto';
+import { UpdateUserDto } from './dto/update.user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  getAll(): Promise<User[]> {
+  getAll(): Promise<SimpleUserDto[]> {
     return this.usersService.getAll();
   }
 
-  // @Get('search')
-  // search(@Query('name') searchingName:string){
-  //   return `You will search User by name : ${searchingName}`
-  // }
+  @Get('search')
+  search(@Query('name') userInput: string): Promise<SimpleUserDto[]> {
+    return this.usersService.search(userInput);
+  }
 
   @Get(':id')
-  getOne(@Param('id') id: number): Promise<User> {
+  getOne(@Param('id') id: number): Promise<SimpleUserDto> {
     return this.usersService.getOne(id);
   }
 
   @Post()
-  create(@Body() user: User) {
-    return this.usersService.create(user);
+  create(@Body() createUserDto: CreateUserDto) {
+    this.usersService.create(createUserDto);
   }
 
   @Delete(':id')
@@ -41,7 +43,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() user: User) {
-    this.usersService.update(id, user);
+  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+    this.usersService.update(id, updateUserDto);
   }
 }
