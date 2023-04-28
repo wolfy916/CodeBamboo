@@ -1,7 +1,4 @@
-import { Inter } from 'next/font/google'
 import { useQuery } from 'react-query'
-
-const inter = Inter({ subsets: ['latin'] })
 
 const fetchUser = async () => {
   const BASE_URL = 'http://localhost:8000'
@@ -28,7 +25,7 @@ export default function Home() {
 
   return (
     <>
-    <h1 className="text-3xl underline text-green font-scp font-bold">
+    <h1 className="text-3xl underline text-bamboo font-scp font-bold">
       Tailwind CSS rules!
     </h1>
     <div>
