@@ -1,21 +1,22 @@
 import React from 'react';
+import Link from 'next/link';
 
-interface Prop {
+interface Props {
   isHovered: boolean
 }
 
-export const BarItems: React.FC<Prop> = ({ isHovered }) => {
+export const BarItems = ({ isHovered } : Props) => {
 
   const HoverBarItems = isHovered ?
     <>
-      <div>New</div>
-      <div>Search</div>
+      <Link href={"/topics"}><div>New</div></Link>
+      <Link href={"/search"}><div>Search</div></Link>
       <div>Username/Login</div>
     </>
     :
     <>
-      <div>N</div>
-      <div>S</div>
+      <Link href={"/topics"}><div>N</div></Link>
+      <Link href={"/search"}><div>S</div></Link>
       <div>U</div>
     </>
 

@@ -5,7 +5,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export const Layout: React.FC<Props> = ({ children }) => {
+export const Layout = ({ children } : Props) => {
   return (
     <div className="flex min-h-screen
                     flex-col 

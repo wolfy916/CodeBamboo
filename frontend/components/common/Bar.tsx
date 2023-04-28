@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Link from 'next/link';
 import useIsMobile from '@/hooks/useIsMobile';
 import { BarItems } from './BarItems';
 
@@ -12,24 +13,24 @@ export const Bar = () => {
   };
 
   const ResponsiveBarItems = isMobile ? (
-      <>
-        <div onClick={handleMenuClick}>Menu</div>
-        {isMenuOpen && <BarItems isHovered={true} />}
-      </>
-    ) : (
-      <BarItems isHovered={isHovered} />
+    <>
+      <div onClick={handleMenuClick}>Menu</div>
+      {isMenuOpen && <BarItems isHovered={true} />}
+    </>
+  ) : (
+    <BarItems isHovered={isHovered} />
   );
 
   return (
     <aside
-      className="bg-sky-900 text-white relative flex text-center transition-all duration-300
+      className="bg-sky-900 text-white relative flex text-center transition-all duration-500 ease-in-out
                 flex-row justify-between h-20
                 md:flex-col md:justify-normal md:w-24 md:h-screen md:hover:w-48"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div>Logo</div>
-      { ResponsiveBarItems }
+      <Link href="/">Logo</Link>
+      {ResponsiveBarItems}
     </aside>
   );
 };
