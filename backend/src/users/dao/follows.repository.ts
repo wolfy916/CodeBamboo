@@ -1,4 +1,4 @@
-import { Follow } from './entities/follow.entity';
+import { Follow } from '../entities/follow.entity';
 import { DataSource } from 'typeorm';
 
 export const followRepository = [

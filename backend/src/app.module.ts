@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { FollowModule } from './follow/follow.module';
 
 @Module({
   imports: [
@@ -10,7 +9,6 @@ import { FollowModule } from './follow/follow.module';
       isGlobal: true,
     }),
     UsersModule,
-    FollowModule,
   ],
   controllers: [],
   providers: [],

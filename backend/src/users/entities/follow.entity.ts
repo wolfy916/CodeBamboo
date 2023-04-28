@@ -9,10 +9,10 @@ export class Follow {
   follow_id: number;
 
   @ManyToOne(() => User, (user) => user.user_id)
-  @JoinColumn()
+  @JoinColumn({ name: 'follower_id' })
   follower_id: number;
 
   @ManyToOne(() => User, (user) => user.user_id)
-  @JoinColumn()
+  @JoinColumn({ name: 'following_id' })
   following_id: number;
 }
