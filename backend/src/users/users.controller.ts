@@ -12,24 +12,42 @@ import { UsersService } from './users.service';
 import { SimpleUserDto } from './dto/simple.user.dto';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
+import { CreateFollowDto } from './dto/create.follow.dto';
 
-@Controller('users')
+@Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // [#] 테스트용 코드
   @Get()
   getAll(): Promise<SimpleUserDto[]> {
     return this.usersService.getAll();
   }
 
+  // [1] 유저 nickname으로 정보 조회
   @Get('search')
-  search(@Query('name') userInput: string): Promise<SimpleUserDto[]> {
-    return this.usersService.search(userInput);
+  searchUsersNickname(
+    @Query('nickname') searchNickname: string,
+  ): Promise<SimpleUserDto[]> {
+    return this.usersService.searchUsersNickname(searchNickname);
   }
 
+  // [2] 유저Id로 팔로우 목록 조회
+  @Get('following/:id')
+  getFollowUsers(@Param('id') id: number) {
+    return this.usersService.getFollowUsers(id);
+  }
+
+  // [3] 팔로우 생성 및 삭제
+  @Post('follow')
+  followUser(@Body() createFollowDto: CreateFollowDto) {
+    return this.usersService.followUser(createFollowDto);
+  }
+
+  // [4] 유저 id로 정보 조회
   @Get(':id')
-  getOne(@Param('id') id: number): Promise<SimpleUserDto> {
-    return this.usersService.getOne(id);
+  getUser(@Param('id') id: number): Promise<SimpleUserDto> {
+    return this.usersService.getUser(id);
   }
 
   @Post()
@@ -39,11 +57,11 @@ export class UsersController {
 
   @Delete(':id')
   delete(@Param('id') id: number) {
-    this.usersService.deleteOne(id);
+    return this.usersService.deleteOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    this.usersService.update(id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 }

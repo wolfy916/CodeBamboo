@@ -13,9 +13,6 @@ export class User {
   })
   user_id: number;
 
-  @Column()
-  username: string;
-
   @Column({ nullable: true })
   email: string;
 
@@ -28,7 +25,9 @@ export class User {
   @Column()
   provider: string;
 
-  @Column()
+  @Column({
+    type: 'bigint',
+  })
   oauth_id: number;
 
   @CreateDateColumn()
@@ -40,6 +39,6 @@ export class User {
   @Column({ nullable: true })
   introduce: string;
 
-  @Column()
+  @Column({ nullable: true })
   refreshToken: string;
 }

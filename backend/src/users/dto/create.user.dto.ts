@@ -8,10 +8,6 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
-  @IsNotEmpty()
-  @IsString()
-  username: string;
-
   @IsOptional()
   @IsEmail()
   email: string;

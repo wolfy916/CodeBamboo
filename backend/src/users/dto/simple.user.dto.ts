@@ -14,10 +14,6 @@ export class SimpleUserDto {
   @IsNumber()
   user_id: number;
 
-  @IsNotEmpty()
-  @IsString()
-  username: string;
-
   @IsOptional()
   @IsEmail()
   email: string;
