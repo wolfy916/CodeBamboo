@@ -9,6 +9,7 @@ import {
 import { Follow } from './follow.entity';
 import { Bookmark } from './bookmark.entity';
 import { Like } from './like.entity';
+import { Topic } from 'src/topics/entities/topic.entity';
 
 @Entity()
 export class User {
@@ -52,4 +53,7 @@ export class User {
 
   @OneToMany(() => Like, (like) => like.user)
   likes: Like[];
+
+  @OneToMany(() => Topic, (topic) => topic.user)
+  topic: Topic[];
 }

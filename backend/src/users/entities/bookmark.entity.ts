@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
-// import Leaf from 'LEAF_ENTITY_ADDRESS';
+import { Leaf } from 'src/leafs/entities/leaf.entity';
 
 @Entity()
 export class Bookmark {
