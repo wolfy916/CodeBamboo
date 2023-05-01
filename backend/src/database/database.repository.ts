@@ -19,7 +19,7 @@ export const databaseProviders = [
         password: process.env.MYSQL_PASSWORD,
         database: process.env.MYSQL_DATABASE,
         entities: [User, Topic, Leaf, Code, Follow, Bookmark, Like],
-        synchronize: true,
+        synchronize: false,
       });
 
       return dataSource.initialize();
