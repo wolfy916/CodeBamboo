@@ -21,7 +21,7 @@ export class AuthService {
     private GithubService : GithubService,
     ) {}
   
-  async signUp({nickname, image, oauth_id, provider, email} : SocialUserInfoDto): Promise<SimpleUserDto> {
+  async signUp({nickname, image, oauth_id, provider, email} : SocialUserInfoDto): Promise<User> {
     oauth_id = oauth_id.toString()
     const user = this.userRepository.create({nickname, image, oauth_id, provider, email});
     await this.userRepository.save(user);
