@@ -2,10 +2,11 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { Follow } from './entities/follow.entity';
 import { Repository, Like, Equal } from 'typeorm';
-import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { SimpleUserDto } from './dto/simple.user.dto';
 import { CreateFollowDto } from './dto/create.follow.dto';
+import { GetUserDto } from './dto/get.user.dto';
+import { MessageUserDto } from './dto/message.user.dto';
 
 @Injectable()
 export class UsersService {
@@ -33,56 +34,83 @@ export class UsersService {
     return users;
   }
 
-  // [2] 유저Id로 팔로우 목록 조회
-  async getFollowUsers(id: number) {
+  // [2 - 1] 유저Id로 팔로우 목록 조회
+  async getFollowUsers(id: number): Promise<GetUserDto[]> {
     const existedUser = await this.getUser(id);
     if (existedUser) {
-      const follow = await this.followRepository.findBy({
-        follower: Equal(id),
+      const users = await this.userRepository.findOne({
+        where: {
+          user_id: id,
+        },
+        relations: {
+          followings: true,
+        },
       });
-      console.log(follow);
-      return follow;
+      return users.followings.map((obj) => {
+        const followedUser = {
+          user_id: obj.followed.user_id,
+          nickname: obj.followed.nickname,
+          image: obj.followed.image,
+          introduce: obj.followed.introduce,
+          email: obj.followed.email,
+          isDeleted: obj.followed.isDeleted,
+          // isFollowed: obj.followed.isFollowed,
+        };
+        return followedUser;
+      });
     }
   }
 
+  // [2 - 2] 내가 팔로우한 사람인지 아닌지 판별
+  async isFollowUser(myUserId: number, targetUserId: number): Promise<boolean> {
+    const existedMyUserId = await this.getUser(myUserId);
+    if (existedMyUserId) {
+      const myFollowUsers = await this.getFollowUsers(targetUserId);
+      for (let i = 0; i < myFollowUsers.length; i++) {
+        if (myFollowUsers[i].user_id === targetUserId) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   // [3] 팔로우 생성
-  async followUser(createFollowDto: CreateFollowDto): Promise<void> {
-    console.log(createFollowDto);
+  async followUser(createFollowDto: CreateFollowDto): Promise<MessageUserDto> {
     const existedUserA = await this.getUser(createFollowDto.userId);
     const existedUserB = await this.getUser(createFollowDto.followUserId);
     if (existedUserA && existedUserB) {
       const follow = await this.followRepository.findBy({
-        follower: Equal(createFollowDto.userId),
-        followee: Equal(createFollowDto.followUserId),
+        following: Equal(createFollowDto.userId),
+        followed: Equal(createFollowDto.followUserId),
       });
-      console.log(follow);
+      const messageUserDto = new MessageUserDto();
       if (follow.length <= 0) {
         // 없는 관계면 생성
         await this.followRepository.save({
-          follower: existedUserA,
-          followee: existedUserB,
+          following: existedUserA,
+          followed: existedUserB,
         });
+        messageUserDto.message = `${existedUserB.nickname}님을 팔로우했어요 !`;
+        return messageUserDto;
       } else {
         // 이미 있는 관계면 삭제
         await this.followRepository.delete(follow[0].follow_id);
+        messageUserDto.message = `${existedUserB.nickname}님을 언팔로우했어요 !`;
+        return messageUserDto;
       }
     }
   }
 
   // [4] 유저 id로 정보 조회
-  async getUser(id: number): Promise<SimpleUserDto> {
+  async getUser(id: number): Promise<GetUserDto> {
     const user = await this.userRepository.findOne({ where: { user_id: id } });
     if (!user) {
       throw new NotFoundException(`user id ${id} not found`);
     }
+    // [2-2]를 호출하여 내가 팔로우한 유저인지 아닌지 확인한 값을 추가
+    // user.isfollowed = await this.isFollowUser(myUserId, id)
     return user;
-  }
-
-  async create(createUserdto: CreateUserDto): Promise<void> {
-    await this.userRepository.save({
-      ...createUserdto,
-      refreshToken: '신선한 토큰',
-    });
   }
 
   async deleteOne(id: number): Promise<void> {

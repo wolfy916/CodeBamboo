@@ -27,10 +27,8 @@ export class User {
   @Column()
   provider: string;
 
-  @Column({
-    type: 'bigint',
-  })
-  oauth_id: number;
+  @Column()
+  oauth_id: string;
 
   @CreateDateColumn()
   creation_time: Timestamp;
@@ -41,9 +39,9 @@ export class User {
   @Column({ nullable: true })
   introduce: string;
 
-  @OneToMany(() => Follow, (follow) => follow.follower)
-  following: Follow[];
+  @OneToMany(() => Follow, (follow) => follow.following)
+  followings: Follow[];
 
-  @OneToMany(() => Follow, (follow) => follow.followee)
-  followers: Follow[];
+  @OneToMany(() => Follow, (follow) => follow.followed)
+  followeds: Follow[];
 }

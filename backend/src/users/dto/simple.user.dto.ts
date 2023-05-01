@@ -31,10 +31,10 @@ export class SimpleUserDto {
   provider: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  oauth_id: number;
+  @IsString()
+  oauth_id: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDate()
   creation_time: Timestamp;
 

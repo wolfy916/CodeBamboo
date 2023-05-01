@@ -10,9 +10,9 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { SimpleUserDto } from './dto/simple.user.dto';
-import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { CreateFollowDto } from './dto/create.follow.dto';
+import { GetUserDto } from './dto/get.user.dto';
 
 @Controller('user')
 export class UsersController {
@@ -34,7 +34,7 @@ export class UsersController {
 
   // [2] 유저Id로 팔로우 목록 조회
   @Get('following/:id')
-  getFollowUsers(@Param('id') id: number) {
+  getFollowUsers(@Param('id') id: number): Promise<GetUserDto[]> {
     return this.usersService.getFollowUsers(id);
   }
 
@@ -46,13 +46,8 @@ export class UsersController {
 
   // [4] 유저 id로 정보 조회
   @Get(':id')
-  getUser(@Param('id') id: number): Promise<SimpleUserDto> {
+  getUser(@Param('id') id: number): Promise<GetUserDto> {
     return this.usersService.getUser(id);
-  }
-
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    this.usersService.create(createUserDto);
   }
 
   @Delete(':id')
