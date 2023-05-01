@@ -24,10 +24,8 @@ export class AuthController {
       }
       // 2. provider로부터 유저 정보 받아오기
       const userInfoFromProvider = await this.AuthService.getSocialUserInfo(provider, code);
-      console.log('로직 2 :', userInfoFromProvider)
       // 3. (신규유저일 경우)회원가입 시키고, 토큰 생성 후 반환
       const userInfo = await this.AuthService.socialLogin({...userInfoFromProvider, provider});
-      console.log('로직 3 :', userInfo)
       // 4-1. 리프레시 토큰은 httpOnly로 쿠키에 넣어줌
       res.cookie('refresh_token', userInfo.refresh_token, {
         httpOnly: true,
