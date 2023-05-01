@@ -1,6 +1,8 @@
 import { DataSource } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Follow } from 'src/users/entities/follow.entity';
+import { Bookmark } from 'src/users/entities/bookmark.entity';
+import { Like } from 'src/users/entities/like.entity';
 
 export const databaseProviders = [
   {
@@ -13,7 +15,7 @@ export const databaseProviders = [
         username: process.env.MYSQL_USERNAME,
         password: process.env.MYSQL_PASSWORD,
         database: process.env.MYSQL_DATABASE,
-        entities: [User, Follow],
+        entities: [User, Follow, Bookmark, Like],
         synchronize: false,
       });
 

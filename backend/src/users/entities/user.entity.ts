@@ -7,6 +7,8 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Follow } from './follow.entity';
+import { Bookmark } from './bookmark.entity';
+import { Like } from './like.entity';
 
 @Entity()
 export class User {
@@ -44,4 +46,10 @@ export class User {
 
   @OneToMany(() => Follow, (follow) => follow.followed)
   followeds: Follow[];
+
+  @OneToMany(() => Bookmark, (bookmark) => bookmark.user)
+  bookmarks: Bookmark[];
+
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
 }
