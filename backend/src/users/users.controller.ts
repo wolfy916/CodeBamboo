@@ -1,13 +1,4 @@
-import {
-  Query,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Query, Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { SimpleUserDto } from './dto/simple.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
@@ -16,7 +7,9 @@ import { GetUserDto } from './dto/get.user.dto';
 
 @Controller('user')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    ) {}
 
   // [#] 테스트용 코드
   @Get()

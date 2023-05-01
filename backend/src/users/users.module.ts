@@ -17,5 +17,6 @@ import { likeRepository } from './dao/likes.repository';
     ...likeRepository,
     UsersService,
   ],
+  exports: [...userRepository],
 })
 export class UsersModule {}
