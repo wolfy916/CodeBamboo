@@ -9,5 +9,6 @@ import { followRepository } from './dao/follows.repository';
   imports: [DatabaseModule],
   controllers: [UsersController],
   providers: [...userRepository, ...followRepository, UsersService],
+  exports: [...userRepository]
 })
 export class UsersModule {}

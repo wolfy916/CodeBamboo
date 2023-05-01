@@ -14,10 +14,9 @@ const fetchUser = async () => {
 
 export default function Home() {
   const { isLoading, isError, data: seoyong } = useQuery('user', fetchUser)
-  const API_KEY_KAKAO = process.env.REACT_APP_API_KEY_KAKAO
-  const REDIRECT_URI_SITE = process.env.REACT_APP_REDIRECT_URI
-  const OAUTH_KAKAO = `https://kauth.kakao.com/oauth/authorize?client_id=${API_KEY_KAKAO}&redirect_uri=${REDIRECT_URI_SITE+'kakao'}&response_type=code`
-  console.log(API_KEY_KAKAO, REDIRECT_URI_SITE)
+  const API_KEY_KAKAO = process.env.NEXT_PUBLIC_API_KEY_KAKAO
+  const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI
+  const OAUTH_KAKAO = `https://kauth.kakao.com/oauth/authorize?client_id=${API_KEY_KAKAO}&redirect_uri=${REDIRECT_URI+'kakao'}&response_type=code`
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -29,6 +28,9 @@ export default function Home() {
 
   return (
     <>
+    <h1 className="text-3xl underline text-green font-scp font-bold">
+      Tailwind CSS rules!
+    </h1>
     <div>
       <ol>
         <li>아이디: {seoyong?.id}</li>
