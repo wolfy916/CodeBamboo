@@ -4,7 +4,9 @@ import {
   Column,
   CreateDateColumn,
   Timestamp,
+  OneToMany,
 } from 'typeorm';
+import { Follow } from './follow.entity';
 
 @Entity()
 export class User {
@@ -39,6 +41,9 @@ export class User {
   @Column({ nullable: true })
   introduce: string;
 
-  @Column({ nullable: true })
-  refreshToken: string;
+  @OneToMany(() => Follow, (follow) => follow.follower)
+  following: Follow[];
+
+  @OneToMany(() => Follow, (follow) => follow.followee)
+  followers: Follow[];
 }

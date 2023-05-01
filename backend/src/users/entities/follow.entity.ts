@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 
 @Entity()
@@ -8,11 +8,9 @@ export class Follow {
   })
   follow_id: number;
 
-  @ManyToOne(() => User, (user) => user.user_id)
-  @JoinColumn({ name: 'follower_id' })
-  follower_id: number;
+  @ManyToOne(() => User, (user) => user.following, { onDelete: 'CASCADE' })
+  follower: User;
 
-  @ManyToOne(() => User, (user) => user.user_id)
-  @JoinColumn({ name: 'following_id' })
-  following_id: number;
+  @ManyToOne(() => User, (user) => user.followers, { onDelete: 'CASCADE' })
+  followee: User;
 }

@@ -36,9 +36,12 @@ export class UsersService {
   // [2] 유저Id로 팔로우 목록 조회
   async getFollowUsers(id: number) {
     const existedUser = await this.getUser(id);
-    console.log(existedUser);
     if (existedUser) {
-      return await this.followRepository.findBy({ follower_id: Equal(id) });
+      const follow = await this.followRepository.findBy({
+        follower: Equal(id),
+      });
+      console.log(follow);
+      return follow;
     }
   }
 
@@ -49,15 +52,15 @@ export class UsersService {
     const existedUserB = await this.getUser(createFollowDto.followUserId);
     if (existedUserA && existedUserB) {
       const follow = await this.followRepository.findBy({
-        follower_id: Equal(createFollowDto.userId),
-        following_id: Equal(createFollowDto.followUserId),
+        follower: Equal(createFollowDto.userId),
+        followee: Equal(createFollowDto.followUserId),
       });
       console.log(follow);
       if (follow.length <= 0) {
         // 없는 관계면 생성
         await this.followRepository.save({
-          follower_id: createFollowDto.userId,
-          following_id: createFollowDto.followUserId,
+          follower: existedUserA,
+          followee: existedUserB,
         });
       } else {
         // 이미 있는 관계면 삭제
