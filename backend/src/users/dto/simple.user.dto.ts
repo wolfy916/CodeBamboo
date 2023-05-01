@@ -14,9 +14,9 @@ export class SimpleUserDto {
   @IsNumber()
   user_id: number;
 
-  @IsNotEmpty()
-  @IsString()
-  username: string;
+  // @IsNotEmpty()
+  // @IsString()
+  // username: string;
 
   @IsOptional()
   @IsEmail()
@@ -49,8 +49,5 @@ export class SimpleUserDto {
   @IsOptional()
   @IsString()
   introduce: string;
-
-  @IsNotEmpty()
-  @IsString()
-  refreshToken: string;
+  
 }
