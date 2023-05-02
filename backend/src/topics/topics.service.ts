@@ -52,13 +52,13 @@ export class TopicsService {
     return topic;
   }
 
-  async create(createTopic): Promise<void> {
+  async create(data): Promise<void> {
     //1.dto가 아닌 그냥 json파일 받아오기
-    // console.log(createTopic);
+    // console.log(data);
 
     //2. user와 needHelp를 분리
-    const user = { user: { user_id: createTopic.user_id } };
-    const need_help = { needHelp: createTopic.needHelp };
+    const user = { user: { user_id: data.user_id } };
+    const need_help = { needHelp: data.needHelp };
 
     //3.분리한 것으로 topic생성
     const topic = { ...user, ...need_help };
@@ -71,14 +71,14 @@ export class TopicsService {
     // console.log(topic_id);
     //5.topic은 무조건 is_root가 true
     const is_root = { is_root: true };
-    //6.createTopic에서 user_id와 needHelp를 분리
-    const { user_id, needHelp, ...obj } = createTopic;
-    createTopic = obj;
+    //6.data에서 user_id와 needHelp를 분리
+    const { user_id, needHelp, ...obj } = data;
+    data = obj;
 
     //7. leafDto를 생성
     const leaf: CreateLeafDto = {
       ...user,
-      ...createTopic,
+      ...data,
       ...is_root,
       ...topic_id,
     };
@@ -87,21 +87,17 @@ export class TopicsService {
     await this.leafRepository.save(newLeaf);
 
     //8.leaf_id 받아오기
-    // console.log(createTopic.codes.length);
+    // console.log(data.codes.length);
     const leaf_id = { leaf: { leaf_id: newLeaf.leaf_id } };
     //9.codes의 갯수만큼 for문 돌면서 code생성
-    for (let index = 0; index < createTopic.codes.length; index++) {
-      const code = { ...leaf_id, ...createTopic.codes[index] };
+    for (let index = 0; index < data.codes.length; index++) {
+      const code = { ...leaf_id, ...data.codes[index] };
       // console.log(code);
       const newCodes = this.codeRepository.create(code);
       // console.log(newCodes);
       await this.codeRepository.save(newCodes);
     }
   }
-
-  // async create(createTopic: createTopic): Promise<void> {
-  //   await this.topicRepository.save(createTopic);
-  // }
 
   //   async deleteOne(id: number): Promise<void> {
   //     const simpleUserDto = await this.getOne(id);
