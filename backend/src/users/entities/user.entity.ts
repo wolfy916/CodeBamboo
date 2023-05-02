@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Follow } from './follow.entity';
+import { Topic } from 'src/topics/entities/topic.entity';
 
 @Entity()
 export class User {
@@ -44,4 +45,7 @@ export class User {
 
   @OneToMany(() => Follow, (follow) => follow.followed)
   followeds: Follow[];
+
+  @OneToMany(() => Topic, (topic) => topic.user)
+  topic: Topic[];
 }

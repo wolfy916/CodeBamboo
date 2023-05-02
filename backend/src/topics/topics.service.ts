@@ -4,12 +4,21 @@ import { Repository, Like } from 'typeorm';
 import { CreateTopicDto } from './dto/create.topic.dto';
 import { SimpleTopicDto } from './dto/simple.topic.dto';
 import { User } from 'src/users/entities/user.entity';
+import { Leaf } from 'src/leafs/entities/leaf.entity';
+import { CreateLeafDto } from 'src/leafs/dto/create.leaf.dto';
+import { Code } from 'src/leafs/entities/code.entity';
 
 @Injectable()
 export class TopicsService {
   constructor(
     @Inject('TOPIC_REPOSITORY')
     private topicRepository: Repository<Topic>,
+
+    @Inject('LEAF_REPOSITORY')
+    private leafRepository: Repository<Leaf>,
+
+    @Inject('CODE_REPOSITORY')
+    private codeRepository: Repository<Code>,
   ) {}
 
   async getAll(): Promise<SimpleTopicDto[]> {
@@ -43,20 +52,55 @@ export class TopicsService {
     return topic;
   }
 
-  async create(createTopicDto: CreateTopicDto): Promise<CreateTopicDto> {
-    console.log(createTopicDto);
-    const topic = {
-      user_id: createTopicDto.user.user_id,
-      ...createTopicDto,
-    };
-    console.log(`"topic: " ${topic}`);
+  async create(createTopic): Promise<void> {
+    //1.dto가 아닌 그냥 json파일 받아오기
+    // console.log(createTopic);
+
+    //2. user와 needHelp를 분리
+    const user = { user: { user_id: createTopic.user_id } };
+    const need_help = { needHelp: createTopic.needHelp };
+
+    //3.분리한 것으로 topic생성
+    const topic = { ...user, ...need_help };
     const newTopic = this.topicRepository.create(topic);
-    console.log(newTopic);
-    return await this.topicRepository.save(newTopic);
+    // console.log(newTopic);
+    await this.topicRepository.save(newTopic);
+
+    //4.생성된 topic_id받아오기
+    const topic_id = { topic: { topic_id: newTopic.topic_id } };
+    // console.log(topic_id);
+    //5.topic은 무조건 is_root가 true
+    const is_root = { is_root: true };
+    //6.createTopic에서 user_id와 needHelp를 분리
+    const { user_id, needHelp, ...obj } = createTopic;
+    createTopic = obj;
+
+    //7. leafDto를 생성
+    const leaf: CreateLeafDto = {
+      ...user,
+      ...createTopic,
+      ...is_root,
+      ...topic_id,
+    };
+    const newLeaf = this.leafRepository.create(leaf);
+    // console.log(newLeaf);
+    await this.leafRepository.save(newLeaf);
+
+    //8.leaf_id 받아오기
+    // console.log(createTopic.codes.length);
+    const leaf_id = { leaf: { leaf_id: newLeaf.leaf_id } };
+    //9.codes의 갯수만큼 for문 돌면서 code생성
+    for (let index = 0; index < createTopic.codes.length; index++) {
+      const code = { ...leaf_id, ...createTopic.codes[index] };
+      // console.log(code);
+      const newCodes = this.codeRepository.create(code);
+      // console.log(newCodes);
+      await this.codeRepository.save(newCodes);
+    }
   }
 
-  // async create(createTopicDto: CreateTopicDto): Promise<void> {
-  //   await this.topicRepository.save(createTopicDto);
+  // async create(createTopic: createTopic): Promise<void> {
+  //   await this.topicRepository.save(createTopic);
   // }
 
   //   async deleteOne(id: number): Promise<void> {
