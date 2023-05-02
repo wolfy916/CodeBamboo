@@ -23,8 +23,8 @@ export class TopicsService {
 
   async getAll(): Promise<SimpleTopicDto[]> {
     const getall = this.topicRepository.find({
-      relations: ['user'],
-      loadRelationIds: true,
+      relations: ['user', 'leaf'],
+      loadRelationIds: { relations: ['user'] },
     });
     return await getall;
   }
@@ -42,13 +42,14 @@ export class TopicsService {
   async getOne(id: number): Promise<SimpleTopicDto> {
     const topic = await this.topicRepository.findOne({
       where: { topic_id: id },
-      relations: ['user'],
-      loadRelationIds: true,
+      relations: ['user', 'leaf'],
+      loadRelationIds: { relations: ['user'] },
     });
     // console.log(topic);
     if (!topic) {
-      throw new NotFoundException(`user id ${id} not found`);
+      throw new NotFoundException(`topic id ${id} not found`);
     }
+
     return topic;
   }
 
@@ -89,6 +90,11 @@ export class TopicsService {
     //8.leaf_id 받아오기
     // console.log(data.codes.length);
     const leaf_id = { leaf: { leaf_id: newLeaf.leaf_id } };
+    //8-1. topic이 생성될 때 best_leaf는 root_leaf이므로 topic entity의 best_leaf_id에 leaf_id 수정.
+    await this.topicRepository.update(newTopic.topic_id, {
+      leaf: { leaf_id: newLeaf.leaf_id },
+    });
+
     //9.codes의 갯수만큼 for문 돌면서 code생성
     for (let index = 0; index < data.codes.length; index++) {
       const code = { ...leaf_id, ...data.codes[index] };

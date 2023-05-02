@@ -7,6 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Topic } from 'src/topics/entities/topic.entity';
@@ -64,4 +65,7 @@ export class Leaf {
 
   @OneToMany(() => Like, (like) => like.user)
   likes: Like[];
+
+  @OneToOne(() => Topic)
+  bestleaf: Topic;
 }
