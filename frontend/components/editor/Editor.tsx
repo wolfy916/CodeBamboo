@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
-import { articleState, codeState } from '@/recoil/topic';
+import { codeState } from '@/recoil/topic';
 import { Controlled as CodeItem } from 'react-codemirror2';
 import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/css/css';
@@ -44,16 +44,7 @@ export const Editor = () => {
       })
       .map((e) => e.language);
 
-    const languageOrder = ['HTML', 'CSS', 'JavaScript', ];
-    const tabs = code
-      .filter(e => languageOrder.includes(e.language))
-      .sort((a, b) => {
-        return languageOrder.indexOf(a.language) - languageOrder.indexOf(b.language);
-      })
-      .map((e) => e.language);
-
     return (
-      <div className='flex flex-row'>
       <div className='flex flex-row'>
         {tabs.map((tab) => (
           <div 
@@ -64,23 +55,7 @@ export const Editor = () => {
           >
               {`${tab}`}
           </div>
-          <div 
-            className={`flex w-28 h-16 text-center text-white items-center justify-center
-                        ${selectedLanguage === tab ? 'font-bold bg-bamboo' : 'bg-editor'}`}
-            key={tab} 
-            onClick={()=>setSelectedLanguage(tab)}
-          >
-              {`${tab}`}
-          </div>
         ))}
-        {isMobile && 
-        <div
-          className={`flex w-20 h-16 text-center text-white items-center justify-center
-                      ${selectedLanguage === 'Content' ? 'font-bold bg-bamboo' : 'bg-editor'}`}
-          onClick={()=>setSelectedLanguage('Content')}
-        >
-          Text
-        </div>}
         {isMobile && 
         <div
           className={`flex w-20 h-16 text-center text-white items-center justify-center
@@ -122,6 +97,9 @@ export const Editor = () => {
                 mode: 'xml',
                 theme: 'material',
                 lineNumbers: true,
+                // imeMode: 'disabled',
+                // spellcheck: false,
+                inputStyle: "contenteditable",  
               }}
               autoScroll={false}
               ref={wrapperRef}
