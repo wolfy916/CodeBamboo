@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
-import { articleState, codeState } from '@/recoil/topic';
+import { codeState } from '@/recoil/topic';
 import { Controlled as CodeItem } from 'react-codemirror2';
 import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/css/css';
@@ -8,13 +8,18 @@ import 'codemirror/mode/javascript/javascript';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import { Rendering } from './Rendering';
+import { Article } from './Article';
 import useIsMobile from '@/hooks/useIsMobile';
 
 export const Editor = () => {
   const [code, setCode] = useRecoilState(codeState);
-  const [article, setArticle] = useRecoilState(articleState);
   const isMobile = useIsMobile();
   const [selectedLanguage, setSelectedLanguage] = useState(code[0].language);
+
+  useEffect(() => {
+    if (isMobile) return;
+    setSelectedLanguage(code[0].language)
+  },[isMobile])
 
   const handleChange = (editor: any, data: any, value: string) => {
     const selectedCodeIndex = code.findIndex(
@@ -92,7 +97,6 @@ export const Editor = () => {
                 mode: 'xml',
                 theme: 'material',
                 lineNumbers: true,
-                
               }}
               autoScroll={false}
               ref={wrapperRef}
@@ -100,14 +104,14 @@ export const Editor = () => {
               editorWillUnmount={editorWillUnmount}
             />
             :
-            <div className='bg-editor h-full text-white'>{article.title} <div></div> {article.content}</div>
+            <Article />
           }
         </div>
       </div>
       <div className='h-full
       
                       md:w-1/2'>
-        {!isMobile && <div className='bg-editor h-1/2 text-white'>{article.title} <div></div> {article.content}</div>}
+        {!isMobile && <Article />}
         <Rendering/>
       </div>
     </div>

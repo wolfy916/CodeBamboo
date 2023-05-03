@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query'
-import { LeafItem } from '@/components/LeafItem'
+import { TopicItem } from '@/components/TopicItem'
 import { UserItem } from '@/components/UserItem'
 
 const fetchUser = async () => {
@@ -49,7 +49,7 @@ export default function Home() {
       <button><a href={OAUTH_KAKAO}>카카오 로그인</a></button>
       <button><a href={OAUTH_NAVER}>네이버 로그인</a></button>
       <button><a href={OAUTH_GITHUB}>깃허브 로그인</a></button>
-      <LeafItem />
+      <TopicItem />
       <UserItem />
     </>
   );
