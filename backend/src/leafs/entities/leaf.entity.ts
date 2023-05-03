@@ -12,7 +12,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Topic } from 'src/topics/entities/topic.entity';
 import { Code } from './code.entity';
 import { Bookmark } from 'src/users/entities/bookmark.entity';
-import { Like } from 'src/users/entities/like.entity';
+import { LikeEntity } from 'src/users/entities/like.entity';
 
 @Entity()
 export class Leaf {
@@ -48,20 +48,23 @@ export class Leaf {
   @Column({ type: 'bigint', default: 0 })
   parent_leaf_id: number;
 
-  @ManyToOne(() => User, (user) => user.user_id)
+  @ManyToOne(() => User, (user) => user.leafs, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Topic, (topic) => topic.topic_id)
+  @ManyToOne(() => Topic, (topic) => topic.leafs, { eager: true })
   @JoinColumn({ name: 'topic_id' })
   topic: Topic;
 
-  @OneToMany(() => Code, (code) => code.leaf, { eager: true })
-  code: Code[];
+  @OneToMany(() => Code, (code) => code.leaf)
+  codes: Code[];
 
   @OneToMany(() => Bookmark, (bookmark) => bookmark.user)
   bookmarks: Bookmark[];
 
-  @OneToMany(() => Like, (like) => like.user)
-  likes: Like[];
+  @OneToMany(() => LikeEntity, (like) => like.user)
+  likes: LikeEntity[];
 }
