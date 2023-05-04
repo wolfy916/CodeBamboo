@@ -38,29 +38,29 @@ export class TopicsService {
     const titleTopics = await this.topicRepository.find({
       relations: {
         user: true,
-        rootLeaf: { code: true },
-        bestLeaf: { code: true },
+        rootLeaf: { codes: true },
+        bestLeaf: { codes: true },
       },
       where: {
         rootLeaf: { title: Like(`%${userInput}%`) },
       },
       select: {
         user: { nickname: true, user_id: true, image: true },
-        rootLeaf: { title: true, content: true, code: true },
-        bestLeaf: { title: true, content: true, code: true },
+        rootLeaf: { title: true, content: true, codes: true },
+        bestLeaf: { title: true, content: true, codes: true },
       },
     });
     const userTopics = await this.topicRepository.find({
       relations: {
         user: true,
-        rootLeaf: { code: true },
-        bestLeaf: { code: true },
+        rootLeaf: { codes: true },
+        bestLeaf: { codes: true },
       },
       where: { user: { nickname: Like(`%${userInput}%`) } },
       select: {
         user: { nickname: true, user_id: true, image: true },
-        rootLeaf: { title: true, content: true, code: true },
-        bestLeaf: { title: true, content: true, code: true },
+        rootLeaf: { title: true, content: true, codes: true },
+        bestLeaf: { title: true, content: true, codes: true },
       },
     });
     //닉네임이나 타이틀로 검색 안되면 []로 들어와서 길이를 재서 유무 판별
@@ -83,9 +83,9 @@ export class TopicsService {
       },
       relations: {
         user: true,
-        rootLeaf: { code: true },
-        bestLeaf: { code: true },
-        leafs: { code: true },
+        rootLeaf: { codes: true },
+        bestLeaf: { codes: true },
+        leafs: { codes: true },
       },
     });
     console.log(topic);

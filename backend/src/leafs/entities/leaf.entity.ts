@@ -61,7 +61,7 @@ export class Leaf {
   topic: Topic;
 
   @OneToMany(() => Code, (code) => code.leaf, { lazy: true })
-  code: Code[];
+  codes: Code[];
 
   @OneToMany(() => Bookmark, (bookmark) => bookmark.user)
   bookmarks: Bookmark[];
