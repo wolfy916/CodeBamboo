@@ -24,9 +24,9 @@ export const BarItems = ({ isHovered } : Props) => {
     </>
     :
     <>
-      <div className=''>
-        <Link href={"/topics"}><div>N</div></Link>
-        <Link href={"/search"}><div>S</div></Link>
+      <div className='flex flex-col items-center'>
+        <Link href={"/topics"}> <img src="/images/icons/new_icon.png" className='mt-5' /> </Link>
+        <Link href={"/search"}> <img src="/images/icons/search_icon.png" className='mt-5' /> </Link>
       </div>
       <div className="mb-8 cursor-pointer" onClick={handleIsModalOpen}>
         <img src={user.image} alt="" className='h-12'/>
