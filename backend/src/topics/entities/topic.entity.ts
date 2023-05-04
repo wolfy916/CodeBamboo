@@ -34,7 +34,11 @@ export class Topic {
   @OneToMany(() => Leaf, (leaf) => leaf.topic)
   leafs: Leaf[];
 
-  @OneToOne(() => Leaf, (leaf) => leaf.bestleaf, { eager: true })
+  @OneToOne(() => Leaf, (leaf) => leaf.bestLeaf)
   @JoinColumn({ name: 'best_leaf_id' })
-  leaf: Leaf;
+  bestLeaf: Leaf;
+
+  @OneToOne(() => Leaf, (leaf) => leaf.rootLeaf)
+  @JoinColumn({ name: 'root_leaf_id' })
+  rootLeaf: Leaf;
 }
