@@ -10,8 +10,9 @@ import { MessageUserDto } from './dto/message.user.dto';
 import { Bookmark } from './entities/bookmark.entity';
 import { Leaf } from 'src/leafs/entities/leaf.entity';
 import { LikeEntity } from './entities/like.entity';
-import { transformUserTopics } from './utils/utils';
+import { transformUserTopics, searchBestLeafId } from './utils/utils';
 import { getUserTopicsDTO } from './dto/get.userTopics.dto';
+import { Topic } from 'src/topics/entities/topic.entity';
 
 @Injectable()
 export class UsersService {
@@ -30,6 +31,9 @@ export class UsersService {
 
     @Inject('LIKE_REPOSITORY')
     private likeRepository: Repository<LikeEntity>,
+
+    @Inject('TOPIC_REPOSITORY')
+    private topicRepository: Repository<Topic>,
   ) {}
 
   // [#] 테스트용 코드
@@ -257,30 +261,54 @@ export class UsersService {
     const existedUser = await this.getUser(userId);
     const existedLeaf = await this.leafRepository.findOne({
       where: { leaf_id: leafId },
+      relations: ['topic'],
     });
     if (!existedLeaf) {
       throw new NotFoundException('없는 리프 입니다.');
     }
+
     if (existedUser && existedLeaf) {
-      const like = await this.likeRepository.findBy({
-        user: Equal(userId),
-        leaf: Equal(leafId),
+      const likeItem = await this.likeRepository.findOne({
+        where: {
+          user: { user_id: userId },
+          leaf: { leaf_id: leafId },
+        },
       });
       const messageUserDto = new MessageUserDto();
-      if (like.length <= 0) {
+      if (!likeItem) {
         // 없는 관계면 생성
         await this.likeRepository.save({
-          user: existedUser,
-          leaf: existedLeaf,
+          user: { user_id: userId },
+          leaf: { leaf_id: leafId },
         });
         messageUserDto.message = `${existedLeaf.leaf_id}번 리프 좋아요 등록 성공`;
-        return messageUserDto;
       } else {
         // 이미 있는 관계면 삭제
-        await this.likeRepository.delete(like[0].like_id);
+        await this.likeRepository.delete(likeItem.like_id);
         messageUserDto.message = `${existedLeaf.leaf_id}번 리프 좋아요 삭제 성공`;
-        return messageUserDto;
       }
+
+      // 좋아요를 누른 리프의 토픽의 손들기 확인
+      if (!(await existedLeaf.topic.needHelp)) {
+        // 좋아요를 누른 리프의 토픽 찾기
+        const topicItem = await this.topicRepository.findOne({
+          where: { topic_id: existedLeaf.topic.topic_id },
+          relations: ['leafs', 'leafs.likes'],
+          loadRelationIds: {
+            relations: ['leafs.likes'],
+          },
+        });
+        // 찾은 토픽의 모든 리프들의 좋아요 수를 비교
+        // 가장 좋아요수가 높은 리프의 leaf_id값을 반환
+        const bestLeafId = searchBestLeafId(topicItem.leafs);
+
+        // 토픽의 best_leaf_id 갱신
+        this.topicRepository.update(topicItem.topic_id, {
+          bestLeaf: { leaf_id: bestLeafId },
+        });
+      }
+
+      return messageUserDto;
     }
   }
 
