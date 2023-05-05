@@ -5,6 +5,7 @@ import { CreateLeafDto } from './dto/create.leaf.dto';
 import { SimpleLeafDto } from './dto/simple.leaf.dto';
 import { Code } from './entities/code.entity';
 import { CreateCodeDto } from './dto/create.code.dto';
+import { makeLeaf } from './utils/utils';
 
 @Injectable()
 export class LeafsService {
@@ -15,40 +16,68 @@ export class LeafsService {
     private codeRepository: Repository<Code>,
   ) {}
 
-  async getAll(): Promise<SimpleLeafDto[]> {
-    const leaf = await this.leafRepository.find({
-      relations: ['user', 'topic', 'code'],
-      loadRelationIds: { relations: ['user', 'topic'] },
+  // async getAll(): Promise<SimpleLeafDto[]> {
+  //   const leaf = await this.leafRepository.find({
+  //     relations: ['user', 'topic', 'code'],
+  //     loadRelationIds: { relations: ['user', 'topic'] },
+  //   });
+  //   return leaf;
+  // }
+
+  async search(userInput: string) {
+    //title로 조회. where문으로 검색할 수 있음. 괄호 주의
+    const titleLeafs = await this.leafRepository.find({
+      where: {
+        title: Like(`%${userInput}%`),
+      },
+      relations: { user: true, likes: true, codes: true },
     });
-    return leaf;
+    const userLeafs = await this.leafRepository.find({
+      relations: {
+        user: true,
+        likes: true,
+        codes: true,
+      },
+      where: { user: { nickname: Like(`%${userInput}%`) } },
+    });
+    //닉네임이나 타이틀로 검색 안되면 []로 들어와서 길이를 재서 유무 판별
+    if (userLeafs.length == 0 && titleLeafs.length == 0) {
+      throw new NotFoundException(
+        `'${userInput}'라는 검색결과를 찾을 수 없습니다.`,
+      );
+    } else if (userLeafs.length > 0) {
+      const user = userLeafs.map((data) => makeLeaf(data));
+      return user;
+    } else if (titleLeafs.length > 0) {
+      const title = titleLeafs.map((data) => makeLeaf(data));
+      return title;
+    }
   }
 
-  //   async search(userInput: string): Promise<SimpleUserDto[]> {
-  //     const users = await this.userRepository.find({
-  //       where: { nickname: Like(`%${userInput}%`) },
-  //     });
-  //     if (!users) {
-  //       throw new NotFoundException(`user nickname ${userInput} not found`);
-  //     }
-  //     return users;
-  //   }
-
-  async getOne(id: number): Promise<SimpleLeafDto> {
+  async getOne(id: number) {
     const leaf = await this.leafRepository.findOne({
+      relations: { user: true, likes: true, codes: true },
       where: { leaf_id: id },
     });
+    // console.log(leaf);
     if (!leaf) {
       throw new NotFoundException(`leaf id ${id} not found`);
     }
-    return leaf;
+    const response = makeLeaf(leaf);
+    return response;
   }
 
   async create(data): Promise<void> {
     // console.log(data);
-    //user와 topic type에 맞추어줌.
+    //user와 topic에 맞추어줌.
     const userId = { user: { user_id: data.user_id } };
     const topicId = { topic: { topic_id: data.topic_id } };
 
+    //type 코드 없으면0, 있으면1 처리
+    let type = { type: 1 };
+    if (data.codes.length == 0) {
+      type = { type: 0 };
+    }
     //code만 따로 저장
     const createCode = data.code;
     let json = { ...data, ...userId, ...topicId };

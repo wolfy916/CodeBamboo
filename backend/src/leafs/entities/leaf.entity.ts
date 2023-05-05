@@ -51,16 +51,16 @@ export class Leaf {
 
   @ManyToOne(() => User, (user) => user.leafs, {
     onDelete: 'CASCADE',
-    lazy: true,
+    eager: true,
   })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Topic, (topic) => topic.leafs, { lazy: true })
+  @ManyToOne(() => Topic, (topic) => topic.leafs, { eager: true })
   @JoinColumn({ name: 'topic_id' })
   topic: Topic;
 
-  @OneToMany(() => Code, (code) => code.leaf, { lazy: true })
+  @OneToMany(() => Code, (code) => code.leaf)
   codes: Code[];
 
   @OneToMany(() => Bookmark, (bookmark) => bookmark.user)

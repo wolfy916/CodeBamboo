@@ -16,18 +16,18 @@ import { SimpleLeafDto } from './dto/simple.leaf.dto';
 export class LeafsController {
   constructor(private readonly leafsService: LeafsService) {}
 
-  @Get()
-  getAll(): Promise<SimpleLeafDto[]> {
-    return this.leafsService.getAll();
+  // @Get()
+  // getAll(): Promise<SimpleLeafDto[]> {
+  //   return this.leafsService.getAll();
+  // }
+
+  @Get('search')
+  search(@Query('input') userInput: string) {
+    return this.leafsService.search(userInput);
   }
 
-  //   @Get('search')
-  //   search(@Query('name') userInput: string): Promise<SimpleUserDto[]> {
-  //     return this.usersService.search(userInput);
-  //   }
-
   @Get(':id')
-  getOne(@Param('id') id: number): Promise<SimpleLeafDto> {
+  getOne(@Param('id') id: number) {
     return this.leafsService.getOne(id);
   }
 
