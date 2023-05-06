@@ -11,6 +11,7 @@ import {
 import { LeafsService } from './leafs.service';
 import { CreateLeafDto } from './dto/create.leaf.dto';
 import { SimpleLeafDto } from './dto/simple.leaf.dto';
+import { UpdateLeafDto } from './dto/update.leaf.dto';
 
 @Controller('leaf')
 export class LeafsController {
@@ -45,8 +46,8 @@ export class LeafsController {
   //     this.usersService.deleteOne(id);
   //   }
 
-  //   @Patch(':id')
-  //   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-  //     this.usersService.update(id, updateUserDto);
-  //   }
+  @Patch(':id')
+  update(@Param('id') id: number, @Body() updateLeafDto: UpdateLeafDto) {
+    this.leafsService.update(id, updateLeafDto);
+  }
 }

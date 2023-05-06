@@ -42,10 +42,10 @@ export class TopicsController {
     return this.topicsService.closeHelp(id);
   }
 
-  //   @Delete(':id')
-  //   delete(@Param('id') id: number) {
-  //     this.usersService.deleteOne(id);
-  //   }
+  @Delete(':id')
+  delete(@Param('id') id: number) {
+    this.topicsService.deleteOne(id);
+  }
 
   //   @Patch(':id')
   //   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {

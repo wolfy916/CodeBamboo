@@ -1,4 +1,9 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Topic } from './entities/topic.entity';
 import { Repository, Like } from 'typeorm';
 import { SimpleTopicDto } from './dto/simple.topic.dto';
@@ -154,12 +159,21 @@ export class TopicsService {
     }
   }
 
-  //   async deleteOne(id: number): Promise<void> {
-  //     const simpleUserDto = await this.getOne(id);
-  //     if (simpleUserDto) {
-  //       await this.userRepository.delete(id);
-  //     }
-  //   }
+  async deleteOne(id: number): Promise<void> {
+    const simpleUserDto = await this.getOne(id);
+    console.log(simpleUserDto.leafs.length);
+    if (!simpleUserDto) {
+      throw new NotFoundException(`'${id}'번 토픽을 찾을 수 없습니다.`);
+    }
+    if (simpleUserDto.leafs.length > 1) {
+      throw new UnauthorizedException(
+        `'${id}'번 토픽은 2개 이상의 리프를 가지고 있어 삭제가 불가능합니다.`,
+      );
+    } else if (simpleUserDto.leafs.length === 1) {
+      await this.topicRepository.delete(id);
+    }
+  }
+
   async closeHelp(id: number): Promise<void> {
     await this.topicRepository.update(id, { needHelp: false });
   }

@@ -6,6 +6,7 @@ import { SimpleLeafDto } from './dto/simple.leaf.dto';
 import { Code } from './entities/code.entity';
 import { CreateCodeDto } from './dto/create.code.dto';
 import { makeLeaf } from './utils/utils';
+import { UpdateLeafDto } from './dto/update.leaf.dto';
 
 @Injectable()
 export class LeafsService {
@@ -75,12 +76,12 @@ export class LeafsService {
 
     //type 코드 없으면0, 있으면1 처리
     let type = { type: 1 };
-    if (data.codes.length == 0) {
+    if (data.code.length == 0) {
       type = { type: 0 };
     }
     //code만 따로 저장
     const createCode = data.code;
-    let json = { ...data, ...userId, ...topicId };
+    let json = { ...data, ...userId, ...topicId, ...type };
 
     //json에서 code객체만 추출 후 재정의
     const { code, ...obj } = json;
@@ -98,8 +99,8 @@ export class LeafsService {
       // console.log(element);
       const id = { leaf: { leaf_id: leaf_id } };
       const json: CreateCodeDto = { ...element, ...id };
-      // console.log(json);
-      await this.codeRepository.save(json);
+      const newCode = this.codeRepository.create(json);
+      await this.codeRepository.save(newCode);
     }
   }
 
@@ -110,19 +111,51 @@ export class LeafsService {
   //     }
   //   }
 
-  //   async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
-  //     const simpleUserDto = await this.getOne(id);
-  //     if (simpleUserDto) {
-  //       await this.userRepository
-  //         .createQueryBuilder()
-  //         .update(User)
-  //         .set({
-  //           nickname: updateUserDto.nickname,
-  //           image: updateUserDto.image,
-  //           introduce: updateUserDto.introduce,
-  //         })
-  //         .where('user_id = :id', { id })
-  //         .execute();
-  //     }
-  //   }
+  async update(id: number, updateLeafDto: UpdateLeafDto): Promise<void> {
+    const leafDto = await this.getOne(id);
+    const leaf_id = { leaf: { leaf_id: id } };
+    //
+    if (leafDto) {
+      //update의 코드를 먼저 꺼내서 코드가 있으면 type=1 없으면 0,
+      let type = 0;
+      if (leafDto.codes) {
+        await this.codeRepository
+          .createQueryBuilder('users')
+          .delete()
+          .from(Code)
+          .where('leaf_id = :leaf_id', { leaf_id: id })
+          .execute();
+      }
+      if (updateLeafDto.code) {
+        const leafCodeLength = Object.keys(updateLeafDto.code).length;
+        type = 1;
+
+        for (let index = 0; index < leafCodeLength; index++) {
+          const element = updateLeafDto.code[index];
+          // console.log(element);
+          const json = { ...element, ...leaf_id };
+          // console.log(json);
+          const newCode = this.codeRepository.create(json);
+          await this.codeRepository.save(newCode);
+        }
+      }
+      // console.log(updateLeafDto);
+      // 코드 update이후 leaf update 이때 type도 같이 가져가게
+      let contentDto = updateLeafDto.content;
+      if (!contentDto) {
+        contentDto = null;
+      }
+      console.log(contentDto);
+      const updateLeaf = await this.leafRepository
+        .createQueryBuilder()
+        .update(Leaf)
+        .set({
+          title: updateLeafDto.title,
+          content: contentDto,
+          type: type,
+        })
+        .where('leaf_id = :id', { id })
+        .execute();
+    }
+  }
 }
