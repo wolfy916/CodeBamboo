@@ -11,7 +11,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Leaf } from 'src/leafs/entities/leaf.entity';
 import { CreateLeafDto } from 'src/leafs/dto/create.leaf.dto';
 import { Code } from 'src/leafs/entities/code.entity';
-import { makeTopicLeafs } from './utils/utils';
+import { makeTopicLeafs, popularTopic, trendingTopic } from './utils/utils';
 import { searchTopic } from './utils/utils';
 
 @Injectable()
@@ -32,10 +32,60 @@ export class TopicsService {
 
   async getAll(): Promise<SimpleTopicDto[]> {
     const getall = this.topicRepository.find({
-      relations: { user: true, rootLeaf: true, bestLeaf: true },
-      loadRelationIds: { relations: ['user'] },
+      relations: { leafs: true, bestLeaf: true, rootLeaf: true },
     });
     return await getall;
+  }
+
+  async mainList() {
+    const getall = await this.topicRepository.find({
+      relations: {
+        leafs: { likes: true, bookmarks: true },
+        bestLeaf: true,
+        rootLeaf: true,
+      },
+    });
+    // const popularOne = popularTopic(getall[0]);
+    const popular = getall.map((data) => popularTopic(data));
+    // console.log(popular);
+    popular.sort((a, b) => {
+      return b.value - a.value;
+    });
+    console.log(popular);
+    const trending = getall.map((data) => trendingTopic(data));
+    // console.log(trending);
+    trending.sort((a, b) => {
+      return b.value - a.value;
+    });
+    // console.log(trending);
+    const popularRespone = [];
+    const trendingRespone = [];
+    for (let index = 0; index < 6; index++) {
+      const popularOne = await this.topicRepository.findOne({
+        relations: {
+          user: true,
+          rootLeaf: { codes: true, user: true, likes: true },
+          bestLeaf: { codes: true, user: true, likes: true },
+        },
+        where: { topic_id: popular[index]['topic_id'] },
+      });
+      popularRespone.push(searchTopic(popularOne));
+
+      const trendingOne = await this.topicRepository.findOne({
+        relations: {
+          user: true,
+          rootLeaf: { codes: true, user: true, likes: true },
+          bestLeaf: { codes: true, user: true, likes: true },
+        },
+        where: { topic_id: trending[index]['topic_id'] },
+      });
+      trendingRespone.push(searchTopic(trendingOne));
+    }
+    const response = {
+      ...{ popular: popularRespone },
+      ...{ trending: trendingRespone },
+    };
+    return response;
   }
 
   //검색에서는 makeLeaf함수 가능

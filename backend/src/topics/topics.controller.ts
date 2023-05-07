@@ -22,6 +22,11 @@ export class TopicsController {
     return this.topicsService.getAll();
   }
 
+  @Get('mainList')
+  mainList() {
+    return this.topicsService.mainList();
+  }
+
   @Get('search')
   search(@Query('input') userInput: string) {
     return this.topicsService.search(userInput);
@@ -42,13 +47,13 @@ export class TopicsController {
     return this.topicsService.closeHelp(id);
   }
 
-  @Delete(':id')
-  delete(@Param('id') id: number) {
-    this.topicsService.deleteOne(id);
-  }
-
   //   @Patch(':id')
   //   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
   //     this.usersService.update(id, updateUserDto);
   //   }
+
+  @Delete(':id')
+  delete(@Param('id') id: number) {
+    this.topicsService.deleteOne(id);
+  }
 }
