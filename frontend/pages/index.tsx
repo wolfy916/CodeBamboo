@@ -1,26 +1,55 @@
-import { useQuery } from 'react-query'
-import { TopicItem } from '@/components/TopicItem'
-import { UserItem } from '@/components/UserItem'
-import { useRecoilState } from 'recoil'
-import { userState } from '@/recoil/user'
-import Modal from '@/components/common/Modal'
-import { useState } from 'react'
+import { useQuery } from 'react-query';
+import { TopicItem } from '@/components/TopicItem';
+import { UserItem } from '@/components/UserItem';
+import { useRecoilState } from 'recoil';
+import { userState } from '@/recoil/user';
+import Modal from '@/components/common/Modal';
+import { useEffect, useState } from 'react';
+import useIsClient from '../hooks/useIsClient';
 
 const fetchUser = async () => {
-  const BASE_URL = 'http://localhost:8000'
-  const response = await fetch(BASE_URL+'/users/1', {
+  const BASE_URL = 'http://localhost:8000';
+  const response = await fetch(BASE_URL + '/users/1', {
     method: 'GET',
-  })
-  const data = await response.json()
-  return data
-}
+  });
+  const data = await response.json();
+  return data;
+};
 
 export default function Home() {
-  const [user, setUser] = useRecoilState(userState)
+  const [user, setUser] = useRecoilState(userState);
+  const isClient = useIsClient();
+  useEffect(() => {
+    if (isClient) {
+      window.addEventListener(
+        'scroll',
+        () => {
+          document.body.style.setProperty(
+            '--scroll',
+            `${
+              window.scrollY / (document.body.offsetHeight - window.innerHeight)
+            }`
+          );
+        },
+        false
+      );
+    }
+  }, [isClient]);
 
   return (
     <>
-      <h1 className="text-3xl underline text-bamboo font-scp font-bold">
+      <div className="progress"></div>
+      <div className="cube-wrap">
+        <div className="cube">
+          <div className="side top"></div>
+          <div className="side bottom"></div>
+          <div className="side front"></div>
+          <div className="side back"></div>
+          <div className="side left"></div>
+          <div className="side right"></div>
+        </div>
+      </div>
+      {/* <h1 className="text-3xl underline text-bamboo font-scp font-bold">
         Tailwind CSS rules!
       </h1>
       <div>
@@ -38,7 +67,7 @@ export default function Home() {
       </div>
       <TopicItem />
       <UserItem />
-      <Modal/>
+      <Modal/> */}
     </>
   );
 }
