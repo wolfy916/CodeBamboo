@@ -7,12 +7,15 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { LeafsService } from './leafs.service';
 import { CreateLeafDto } from './dto/create.leaf.dto';
 import { SimpleLeafDto } from './dto/simple.leaf.dto';
 import { UpdateLeafDto } from './dto/update.leaf.dto';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('leaf')
 export class LeafsController {
   constructor(private readonly leafsService: LeafsService) {}
