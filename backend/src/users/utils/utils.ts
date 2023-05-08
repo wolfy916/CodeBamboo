@@ -42,7 +42,7 @@ export function transformUserTopics(userTopics: Topic[]): UserTopics[] {
   });
 }
 
-// 해당 토픽의 손들기 여부 확인
+// 해당 토픽의 가장 좋아요수가 높은 리프 ID[DB상의 id] 반환
 export function searchBestLeafId(topicLeafs: Leaf[]) {
   let bestLeafId = 1;
   let bestLeafLikes = 0;

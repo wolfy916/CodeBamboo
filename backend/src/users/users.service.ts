@@ -42,6 +42,7 @@ export class UsersService {
   }
 
   // [1] 유저 nickname으로 정보 조회
+  // myUserId가 전달인자로 포함되어야함
   async searchUsersNickname(userInput: string): Promise<GetUserDto[]> {
     const users = await this.userRepository.find({
       where: { nickname: Like(`%${userInput}%`) },
@@ -57,13 +58,14 @@ export class UsersService {
         introduce: obj.introduce,
         email: obj.email,
         isDeleted: obj.isDeleted,
-        // isFollowed: obj.followed.isFollowed,
+        // isFollowed: await this.isFollowerUser(myUserId, obj.user_id),
       };
       return getUserDto;
     });
   }
 
   // [2 - 1] 유저Id로 팔로우 목록 조회
+  // myUserId가 전달인자로 포함되어야함
   async getFollowUsers(id: number): Promise<GetUserDto[]> {
     const existedUser = await this.getUser(id);
     if (existedUser) {
@@ -83,7 +85,7 @@ export class UsersService {
           introduce: obj.followed.introduce,
           email: obj.followed.email,
           isDeleted: obj.followed.isDeleted,
-          // isFollowed: obj.followed.isFollowed,
+          // isFollowed: await this.isFollowerUser(myUserId, obj.followed.user_id),
         };
         return followedUser;
       });
@@ -153,6 +155,7 @@ export class UsersService {
   }
 
   // [5] 특정 유저가 작성한 모든 리프 조회
+  // myUserId가 전달인자로 추가되어야함
   async getUserLeafs(userId: number) {
     const existedUser = await this.getUser(userId);
     if (existedUser) {
@@ -313,6 +316,7 @@ export class UsersService {
   }
 
   // [9] 유저 id로 정보 조회
+  // myUserId가 전달인자로 추가되어야함
   async getUser(id: number): Promise<GetUserDto> {
     const user = await this.userRepository.findOne({ where: { user_id: id } });
     if (!user) {
@@ -323,6 +327,7 @@ export class UsersService {
     return user;
   }
 
+  // [10] 유저 삭제
   async deleteOne(id: number): Promise<void> {
     const user = await this.getUser(id);
     if (user) {
@@ -330,19 +335,20 @@ export class UsersService {
     }
   }
 
+  // [11] 유저 정보 수정
+  // 닉네임, 이미지경로, 자기소개만 수정 가능
   async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
     const simpleUserDto = await this.getUser(id);
     if (simpleUserDto) {
-      await this.userRepository
-        .createQueryBuilder()
-        .update(User)
-        .set({
-          nickname: updateUserDto.nickname,
-          image: updateUserDto.image,
-          introduce: updateUserDto.introduce,
-        })
-        .where('user_id = :id', { id })
-        .execute();
+      await this.userRepository.update(id, {
+        nickname: updateUserDto.nickname
+          ? updateUserDto.nickname
+          : simpleUserDto.nickname,
+        image: updateUserDto.image ? updateUserDto.image : simpleUserDto.image,
+        introduce: updateUserDto.introduce
+          ? updateUserDto.introduce
+          : simpleUserDto.introduce,
+      });
     }
   }
 }

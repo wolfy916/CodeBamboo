@@ -58,6 +58,7 @@ export class UsersController {
 
   // [6] 특정 유저가 즐겨찾기한 리프 조회
   // 헤더값으로 요청한 유저의 아이디값을 알아야함
+  // 현재 더미 userId: 2 전달
   @Get('bookmark')
   getBookmarkLeafs() {
     return this.usersService.getBookmarkLeafs(2);
@@ -65,7 +66,7 @@ export class UsersController {
 
   // [7] 즐겨찾기 추가 및 제거
   // 헤더값으로 요청한 유저의 아이디값을 알아야함
-  // 현재 더미 userId 전달
+  // 현재 더미 userId: 2 전달
   @Post('bookmark/:id')
   addBookmarkLeaf(@Param('id') leafId: number) {
     return this.usersService.addBookmarkLeaf(2, leafId);
@@ -73,7 +74,7 @@ export class UsersController {
 
   // [8] 리프 좋아요 추가 및 삭제
   // 헤더값으로 요청한 유저의 아이디값을 알아야함
-  // 현재 더미 userId 전달
+  // 현재 더미 userId: 2 전달
   @Post('like/:id')
   addLikeLeaf(@Param('id') leafId: number) {
     return this.usersService.addLikeLeaf(2, leafId);
@@ -84,12 +85,12 @@ export class UsersController {
   getUser(@Param('id') id: number): Promise<GetUserDto> {
     return this.usersService.getUser(id);
   }
-
+  // [10] 유저 삭제
   @Delete(':id')
   delete(@Param('id') id: number) {
     return this.usersService.deleteOne(id);
   }
-
+  // [11] 유저 정보 수정
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
