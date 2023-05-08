@@ -1,31 +1,33 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import useIsMobile from '@/hooks/useIsMobile';
+import useIsClient from '@/hooks/useIsClient';
 import { BarItems } from './BarItems';
 
 export const Bar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const isMobile = useIsMobile();
+  const isClient = useIsClient();
 
   const handleMenuClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const ResponsiveBarItems = isMobile ? (
+  const ResponsiveBarItems = isClient && isMobile ? (
     <>
       <div onClick={handleMenuClick} className='h-full w-20 flex justify-center items-center'>
         <img src='/images/icons/menu_icon.png'/>
       </div>
-      {isMenuOpen && <BarItems isHovered={true} />}
+      {isMenuOpen && <BarItems isHovered={true} setIsMenuOpen={setIsMenuOpen} />}
     </>
   ) : (
-    <BarItems isHovered={isHovered} />
+    <BarItems isHovered={isHovered} setIsMenuOpen={setIsMenuOpen} />
   );
 
-  const Logo = 
-  <Link href="/">
-    {isMobile ? <img src="/images/icons/bar_icon.png" /> : <img src="/images/icons/logo_icon.png" className='mt-4' />}
+  const Logo = isClient &&
+  <Link href="/" onClick={() => setIsMenuOpen(false)}>
+    {isMobile ? <img src="/images/icons/bar_icon.png" alt="Bar Icon" /> : <img src="/images/icons/logo_icon.png" className='mt-4' alt="Logo Icon" />}
   </Link>
 
   return (
