@@ -55,7 +55,9 @@ export default function Home() {
   return (
     <>
       {isMain ? (
-        <Intro />
+        <div className='w-full bg-container bg-slate-400'>
+          <Intro />
+        </div>
       ) : (
         <>
           <h1 className="text-3xl underline text-bamboo font-scp font-bold">

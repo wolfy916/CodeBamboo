@@ -27,25 +27,19 @@
     background-repeat: no-repeat;
   }
 
+  .bgImg-position {
+    background-position: 50% 50%;
+    background-size: none;
+  }
+
   .bgImg-bamboo-bar-icon {
     background-image: url('/images/icons/bar_icon.png');
     background-size: contain;
     background-repeat: no-repeat;
   }
-
-  .intro-bg-long-height {
-    min-height: 500vh;
-  }
-
-  .progress-animation {
-    animation: progress 1s linear;
-    /* 애니메이션 정지 */
-    animation-play-state: paused;
-    /* 스크롤에 의존시킴 */
-    animation-delay: calc(var(--scroll) * -1s);
-    /* 스크롤 초과 방지 */
-    animation-iteration-count: 1;
-    animation-fill-mode: both;
+  
+  .bg-container {
+    height: 300vh;
   }
 
   /* 시맨틱 컴포넌트를 위한 클래스들 */
