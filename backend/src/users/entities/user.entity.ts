@@ -4,7 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Timestamp,
+  OneToMany,
 } from 'typeorm';
+import { Follow } from './follow.entity';
+import { Bookmark } from './bookmark.entity';
+import { LikeEntity } from './like.entity';
+import { Topic } from 'src/topics/entities/topic.entity';
+import { Leaf } from 'src/leafs/entities/leaf.entity';
 
 @Entity()
 export class User {
@@ -25,10 +31,8 @@ export class User {
   @Column()
   provider: string;
 
-  @Column({
-    type: 'bigint',
-  })
-  oauth_id: number;
+  @Column()
+  oauth_id: string;
 
   @CreateDateColumn()
   creation_time: Timestamp;
@@ -39,6 +43,21 @@ export class User {
   @Column({ nullable: true })
   introduce: string;
 
-  @Column({ nullable: true })
-  refreshToken: string;
+  @OneToMany(() => Follow, (follow) => follow.following)
+  followings: Follow[];
+
+  @OneToMany(() => Follow, (follow) => follow.followed)
+  followeds: Follow[];
+
+  @OneToMany(() => Bookmark, (bookmark) => bookmark.user)
+  bookmarks: Bookmark[];
+
+  @OneToMany(() => LikeEntity, (like) => like.user)
+  likes: LikeEntity[];
+
+  @OneToMany(() => Topic, (topic) => topic.user)
+  topics: Topic[];
+
+  @OneToMany(() => Leaf, (leaf) => leaf.user)
+  leafs: Leaf[];
 }

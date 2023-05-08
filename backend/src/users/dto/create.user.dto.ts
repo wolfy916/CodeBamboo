@@ -1,14 +1,7 @@
-import {
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsEmail,
-  IsBoolean,
-  IsNotEmpty,
-} from 'class-validator';
+import { IsOptional, IsString, IsEmail, IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
-  @IsOptional()
+  @IsNotEmpty()
   @IsEmail()
   email: string;
 
@@ -16,7 +9,7 @@ export class CreateUserDto {
   @IsString()
   nickname: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   image: string;
 
@@ -25,12 +18,8 @@ export class CreateUserDto {
   provider: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  oauth_id: number;
-
-  @IsOptional()
-  @IsBoolean()
-  isDeleted: boolean;
+  @IsString()
+  oauth_id: string;
 
   @IsOptional()
   @IsString()

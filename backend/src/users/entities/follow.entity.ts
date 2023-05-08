@@ -8,11 +8,17 @@ export class Follow {
   })
   follow_id: number;
 
-  @ManyToOne(() => User, (user) => user.user_id)
-  @JoinColumn({ name: 'follower_id' })
-  follower_id: number;
+  @ManyToOne(() => User, (user) => user.followings, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  @JoinColumn({ name: 'following' })
+  following: User;
 
-  @ManyToOne(() => User, (user) => user.user_id)
-  @JoinColumn({ name: 'following_id' })
-  following_id: number;
+  @ManyToOne(() => User, (user) => user.followeds, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  @JoinColumn({ name: 'followed' })
+  followed: User;
 }
