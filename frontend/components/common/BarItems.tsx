@@ -8,42 +8,64 @@ interface Props {
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const BarItems = ({ isHovered, setIsMenuOpen } : Props) => {
-  const [user, setUser] = useRecoilState(userState)
+export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
+  const [user, setUser] = useRecoilState(userState);
   const handleIsModalOpen = useSetRecoilState(toggleLoginModal);
 
-  const HoverBarItems = isHovered ?
+  const HoverBarItems = isHovered ? (
     <>
       <div onClick={() => setIsMenuOpen(false)}>
-        <Link href={"/topics"}><div>New</div></Link>
-        <Link href={"/search"}><div>Search</div></Link>
+        <Link href={'/topics'}>
+          <div>New</div>
+        </Link>
+        <Link href={'/search'}>
+          <div>Search</div>
+        </Link>
       </div>
       <div
         className="h-fit flex items-center cursor-pointer
 
-                  md:mb-8" 
-        onClick={handleIsModalOpen}>
-        <img src={user.image} alt="" className='h-12'/>
+                  md:mb-8"
+        onClick={handleIsModalOpen}
+      >
+        <img src={user.image} alt="" className="h-12" />
         <span>{user.nickname}</span>
       </div>
     </>
-    :
+  ) : (
     <>
-      <div className='flex flex-col items-center'>
-        <Link href={"/topics"}> <img src="/images/icons/new_icon.png" className='mt-5' /> </Link>
-        <Link href={"/search"}> <img src="/images/icons/search_icon.png" className='mt-5' /> </Link>
+      <div className="flex flex-col items-center">
+        <Link href={'/topics'}>
+          <img src="/images/icons/new_icon.png" className="mt-5" />
+        </Link>
+        <Link href={'/search'}>
+          <img src="/images/icons/search_icon.png" className="mt-5" />
+        </Link>
       </div>
       <div className="mb-8 cursor-pointer" onClick={handleIsModalOpen}>
-        <img src={user.image} alt="" className='h-12'/>
+        <img src={user.image} alt="user_image" className="h-12" />
       </div>
     </>
+  );
 
+  const MenuOpenBackground = (
+    <div
+      className="bg-transparent z-8 absolute top-0 right-0 w-full h-screen
+              md:hidden"
+      onClick={() => setIsMenuOpen(false)}
+    ></div>
+  );
 
   return (
-    <div className='bg-inherit z-10 flex flex-col
-                    absolute top-full right-0 h-80 w-1/2 
-                    md:static md:h-full md:w-auto md:justify-between'>
-      { HoverBarItems }
-    </div>
+    <>
+      <div
+        className="bg-inherit z-10 flex flex-col
+                      absolute top-full right-0 h-80 w-1/2 
+                      md:static md:h-full md:w-auto md:justify-between"
+      >
+        {HoverBarItems}
+      </div>
+      {MenuOpenBackground}
+    </>
   );
 };
