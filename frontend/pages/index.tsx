@@ -7,6 +7,8 @@ import Modal from '@/components/common/Modal';
 import Authapi from '@/hooks/api/axios.authorization.instance';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import { isMainState } from '@/recoil/isMain';
+import { Intro } from '@/components/common/Intro';
 
 // <<query 전략을 정의한다.>>
 
@@ -27,6 +29,7 @@ const queryFn = async () => {
 
 export default function Home() {
   const [user, setUser] = useRecoilState(userState);
+  const [isMain, setIsMain] = useRecoilState(isMainState);
   const router = useRouter();
   const logoutMutation = useMutation(queryFn, {
     onSuccess: (data) => {
@@ -51,42 +54,44 @@ export default function Home() {
 
   return (
     <>
-      <div className="progress"></div>
-      <div className="cube-wrap">
-        <div className="cube">
-          <div className="side top"></div>
-          <div className="side bottom"></div>
-          <div className="side front"></div>
-          <div className="side back"></div>
-          <div className="side left"></div>
-          <div className="side right"></div>
-        </div>
-      </div>
-      {/* <h1 className="text-3xl underline text-bamboo font-scp font-bold">
-        Tailwind CSS rules!
-      </h1>
-      <div>
-        <ol>
-          <img src={user?.image} alt="" className='h-24'/>
-          <li>닉네임: {user?.nickname}</li>
-          <li>이메일: {user?.email}</li>
-          <li>자기소개: {user?.introduce}</li>
-          {user.isLoggedIn?
-          <li>소셜로그인: {user?.provider}</li>
-          :
-          <li>로그인 상태 : false</li>
-          }
-        </ol>
-      </div>
-      {user.isLoggedIn &&
+      {isMain ? (
+        <Intro />
+      ) : (
         <>
-          <button className='pink-button' onClick={() => logoutMutation.mutate()}>로그아웃</button>
-          <button className='pink-button' onClick={() => test123()}>리프레시</button>
+          <h1 className="text-3xl underline text-bamboo font-scp font-bold">
+            Tailwind CSS rules!
+          </h1>
+          <div>
+            <ol>
+              <img src={user?.image} alt="" className="h-24" />
+              <li>닉네임: {user?.nickname}</li>
+              <li>이메일: {user?.email}</li>
+              <li>자기소개: {user?.introduce}</li>
+              {user.isLoggedIn ? (
+                <li>소셜로그인: {user?.provider}</li>
+              ) : (
+                <li>로그인 상태 : false</li>
+              )}
+            </ol>
+          </div>
+          {user.isLoggedIn && (
+            <>
+              <button
+                className="pink-button"
+                onClick={() => logoutMutation.mutate()}
+              >
+                로그아웃
+              </button>
+              <button className="pink-button" onClick={() => test123()}>
+                리프레시
+              </button>
+            </>
+          )}
+          <TopicItem />
+          <UserItem />
+          <Modal />
         </>
-      }
-      <TopicItem />
-      <UserItem />
-      <Modal/> */}
+      )}
     </>
   );
 }

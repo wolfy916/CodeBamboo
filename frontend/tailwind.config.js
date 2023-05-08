@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       transitionProperty: {
-        'w': 'width',
+        w: 'width',
       },
       fontFamily: {
         scp: ['Source Code Pro', 'monospace'],
@@ -17,6 +17,14 @@ module.exports = {
       colors: {
         bamboo: '#2A9464',
         editor: '#263238',
+      },
+      keyframes: {
+        progress: {
+          '100%': {
+            backgroundColor: 'rgb(20, 255, 226)',
+            width: '100vw',
+          },
+        },
       },
     },
   },

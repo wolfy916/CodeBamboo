@@ -2,14 +2,14 @@ import React from 'react';
 import { Bar } from './Bar';
 import { useRecoilState } from 'recoil';
 import { isMainState } from '@/recoil/isMain';
-import useIsClient from '../../hooks/useIsClient';
+// import useIsClient from '../../hooks/useIsClient';
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const Layout = ({ children }: Props) => {
-  const isClient = useIsClient();
+  // const isClient = useIsClient();
   const [isMain, setIsMain] = useRecoilState(isMainState);
   return (
     <div
@@ -17,7 +17,7 @@ export const Layout = ({ children }: Props) => {
                     flex-col 
                     md:flex-row"
     >
-      {isClient && !isMain && <Bar />}
+      {!isMain && <Bar />}
       <main className="h-full w-full">{children}</main>
     </div>
   );
