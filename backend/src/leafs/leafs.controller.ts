@@ -7,27 +7,31 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { LeafsService } from './leafs.service';
 import { CreateLeafDto } from './dto/create.leaf.dto';
 import { SimpleLeafDto } from './dto/simple.leaf.dto';
+import { UpdateLeafDto } from './dto/update.leaf.dto';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('leaf')
 export class LeafsController {
   constructor(private readonly leafsService: LeafsService) {}
 
-  @Get()
-  getAll(): Promise<SimpleLeafDto[]> {
-    return this.leafsService.getAll();
+  // @Get()
+  // getAll(): Promise<SimpleLeafDto[]> {
+  //   return this.leafsService.getAll();
+  // }
+
+  @Get('search')
+  search(@Query('input') userInput: string) {
+    return this.leafsService.search(userInput);
   }
 
-  //   @Get('search')
-  //   search(@Query('name') userInput: string): Promise<SimpleUserDto[]> {
-  //     return this.usersService.search(userInput);
-  //   }
-
   @Get(':id')
-  getOne(@Param('id') id: number): Promise<SimpleLeafDto> {
+  getOne(@Param('id') id: number) {
     return this.leafsService.getOne(id);
   }
 
@@ -45,8 +49,8 @@ export class LeafsController {
   //     this.usersService.deleteOne(id);
   //   }
 
-  //   @Patch(':id')
-  //   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-  //     this.usersService.update(id, updateUserDto);
-  //   }
+  @Patch(':id')
+  update(@Param('id') id: number, @Body() updateLeafDto: UpdateLeafDto) {
+    this.leafsService.update(id, updateLeafDto);
+  }
 }

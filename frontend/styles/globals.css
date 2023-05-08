@@ -21,7 +21,7 @@
     @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
   }
 
-  .bg-bamboo {
+  .bgImg-bamboo {
     background-image: url('/images/bg-bamboo.png');
     background-size: cover;
     background-repeat: no-repeat;
@@ -40,8 +40,12 @@
     @apply h-8 text-white text-xs font-semibold bg-pink-300 border-none rounded px-4 mx-2 cursor-pointer;
   }
 
+  .bamboo-button {
+    @apply h-fit w-fit py-3 px-4 bg-bamboo text-white rounded-lg;
+  }
+
   .header {
-    @apply flex flex-col bg-orange-300 ;
+    @apply flex flex-col bg-orange-300;
   }
 
   .main {
@@ -55,7 +59,7 @@
   .section {
     @apply flex flex-col bg-blue-300;
   }
-  
+
   .footer {
     @apply flex justify-between items-center;
   }
@@ -63,12 +67,11 @@
   .overlay {
     @apply absolute w-full h-full flex flex-col justify-center items-center z-10;
   }
-
 }
 
 @screen md {
   .modal-wrapper {
-    @apply w-3/4 h-5/6 max-w-screen-lg
+    @apply w-3/4 h-5/6 max-w-screen-lg;
   }
 
   .wrapper {
@@ -80,7 +83,7 @@
   }
 
   .main {
-    @apply w-4/5 h-4/5
+    @apply w-4/5 h-4/5;
   }
 
   .article {
@@ -96,95 +99,19 @@
   } */
 }
 
-body {
-  padding: 0;
-  margin: 0;
-  min-height: 500vh;
-  background-color: rgb(139, 201, 228);
-  animation: body 1s linear;
-}
-@keyframes body {
-  to {
-    background-color: rgb(19, 48, 97);
-  }
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
-.progress {
-  height: 3px;
-  width: 0%;
-  background-color: #fff;
-  position: fixed;
-  top: 0;
-  left: 0;
-  animation: progress 1s linear;
-}
-@keyframes progress {
-  to {
-    background-color: rgb(20, 255, 226);
-    width: 100%;
-  }
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.cube-wrap {
-  --size: 30vmin;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  perspective: 100vmin;
-}
-.cube {
-  transform-style: preserve-3d;
-  transform: rotateX(0deg) rotateZ(45deg) rotateY(-45deg);
-  animation: cube 1s linear;
-}
-@keyframes cube {
-  to {
-    transform: rotateX(360deg) rotateZ(45deg) rotateY(-45deg);
-  }
+.article-input {
+  @apply bg-gray-100 rounded-sm w-full mt-1 mb-3 p-2;
 }
 
-.side {
-  position: absolute;
-  width: var(--size);
-  height: var(--size);
-  background-color: #eee;
-  backface-visibility: visible;
-  top: calc(var(--size) * -.5);
-  left: calc(var(--size) * -.5);
-}
-.top {
-  background-color: #fff;
-  transform: rotateX(90deg) translateZ(calc(var(--size) * .5));
-}
-.bottom {
-  background-color: #999;
-  transform: rotateX(90deg) translateZ(calc(var(--size) * -.5));
-}
-.left {
-  background-color: #ccc;
-  transform: rotateY(90deg) translateZ(calc(var(--size) * .5));
-}
-.right {
-  background-color: #ddd;
-  transform: rotateY(90deg) translateZ(calc(var(--size) * -.5));
-}
-.front {
-  background-color: #aaa;
-  transform: translateZ(calc(var(--size) * .5));
-}
-.back {
-  background-color: #bbb;
-  transform: translateZ(calc(var(--size) * -.5));
-}
-
-:root * {
-  /* Pause the animation */
-  animation-play-state: paused;
-  /* Bind the animation to scroll */
-  animation-delay: calc(var(--scroll) * -1s);
-  /* These last 2 properites clean up overshoot weirdness */
-  animation-iteration-count: 1;
-  animation-fill-mode: both;
+.editor-tab {
+  @apply shrink-0 h-auto m-2 rounded-md flex items-center justify-center;
 }
