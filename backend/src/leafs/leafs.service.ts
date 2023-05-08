@@ -1,6 +1,6 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { Leaf } from './entities/leaf.entity';
-import { Repository, Like, QueryFailedError } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { CreateLeafDto } from './dto/create.leaf.dto';
 import { SimpleLeafDto } from './dto/simple.leaf.dto';
 import { Code } from './entities/code.entity';
@@ -81,15 +81,56 @@ export class LeafsService {
     }
     //code만 따로 저장
     const createCode = data.code;
-    let json = { ...data, ...userId, ...topicId, ...type };
 
+    //여기다가 leafTree만들어보자.
+
+    //json받아서 parent_id로 ref_order, step넣어야 함.
+    //parent_id로 leaf찾아서 step따져서 다음 스텝
+    const findParent = await this.leafRepository.findOne({
+      where: { leaf_id: data.parent_leaf_id },
+    });
+    // console.log(findParent);
+    const step = { step: findParent.step + 1 };
+
+    // parent_id같은 leaf찾아서 있으면 leaf들 중 ref_order 마지막에 넣기
+    // 없으면 parent_id 다음 ref_order로
+    const leafOrder = await this.leafRepository.find({
+      where: { parent_leaf_id: findParent.leaf_id },
+      order: { ref_order: 'DESC' },
+    });
+    // console.log(leafOrder);
+    let ref_order_cnt = 0;
+    if (leafOrder.length === 0) {
+      ref_order_cnt = findParent.ref_order + 1;
+    } else {
+      ref_order_cnt = leafOrder[0].ref_order + 1;
+    }
+    const ref_order = { ref_order: ref_order_cnt };
+
+    // 넣기 전에 같은 토픽id를 가진 리프 중 해당 ref_order와 같거나 큰 ref_order 돌면서 하나씩 늘리기
+    const update_ref_order_bigger = await this.leafRepository
+      .createQueryBuilder()
+      .update('leaf')
+      .set({ ref_order: () => 'ref_order + 1' })
+      .where('leaf.topic_id = :topic_id', { topic_id: data.topic_id })
+      .andWhere('leaf.ref_order >= :order', { order: ref_order_cnt })
+      .execute();
+    // console.log(update_ref_order_bigger);
+
+    let json = {
+      ...data,
+      ...userId,
+      ...topicId,
+      ...type,
+      ...step,
+      ...ref_order,
+    };
     //json에서 code객체만 추출 후 재정의
     const { code, ...obj } = json;
     json = obj;
 
     //재정의한 객체를 leaf에 저장
     const createLeaf = await this.leafRepository.save(json);
-
     //leaf_id 가져오기
     const leaf_id = createLeaf.leaf_id;
 
