@@ -80,7 +80,7 @@ function Modal() {
         ref={modalRef}
         className={`${modalWrapperClasses} ${
           Opacity ? 'opacity-70' : 'opacity-100'
-        } bgImg-bamboo items-start w-full h-full border-none 
+        } bgImg-bamboo items-start w-full h-full border-none z-40 
       md:w-4/5 md:h-4/5
     `}
       >
