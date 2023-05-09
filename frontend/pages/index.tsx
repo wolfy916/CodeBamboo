@@ -1,4 +1,3 @@
-import Modal from '@/components/common/Modal';
 import { Intro } from '@/components/main/Intro';
 import Main from '@/components/main/Main';
 
@@ -7,7 +6,6 @@ export default function Home() {
     <div className="w-full h-[820vh]">
       <Intro />
       <Main />
-      <Modal />
     </div>
   );
 }
