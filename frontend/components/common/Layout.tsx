@@ -1,23 +1,21 @@
 import React from 'react';
 import { Bar } from './Bar';
 import { useRecoilState } from 'recoil';
-import { isMainState } from '@/recoil/isMain';
-// import useIsClient from '../../hooks/useIsClient';
+import { isIntroState } from '@/recoil/isIntro';
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const Layout = ({ children }: Props) => {
-  // const isClient = useIsClient();
-  const [isMain, setIsMain] = useRecoilState(isMainState);
+  const [isIntro, setIsIntro] = useRecoilState(isIntroState);
   return (
     <div
       className="flex h-screen w-screen
-                    flex-col 
-                    md:flex-row"
+                  flex-col 
+                  md:flex-row"
     >
-      {!isMain && <Bar />}
+      {!isIntro && <Bar />}
       <main className="h-full w-full">{children}</main>
     </div>
   );

@@ -27,21 +27,6 @@
     background-repeat: no-repeat;
   }
 
-  .bgImg-position {
-    background-position: 50% 50%;
-    background-size: none;
-  }
-
-  .bgImg-bamboo-bar-icon {
-    background-image: url('/images/icons/bar_icon.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-  
-  .bg-container {
-    height: 300vh;
-  }
-
   /* 시맨틱 컴포넌트를 위한 클래스들 */
   .wrapper {
     @apply flex flex-col items-center justify-center;
@@ -129,4 +114,21 @@
 
 .editor-tab {
   @apply shrink-0 h-auto m-2 rounded-md flex items-center justify-center;
+}
+
+.bgImg-position {
+  background-position: 50% 50%;
+  background-size: none;
+}
+
+.bgImg-bamboo-bar-icon {
+  background-image: url('/images/icons/bar_icon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.scroll-arrow {
+  background-image: url('/images/scroll-arrow.png');
+  background-size: contain;
+  background-repeat: no-repeat;
 }
