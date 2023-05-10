@@ -1,16 +1,21 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { toggleLoginModal, userState } from '@/recoil/user';
+import { loginModalState, userState } from '@/recoil/user';
 
 interface Props {
   isHovered: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
-  const [user, setUser] = useRecoilState(userState);
-  const handleIsModalOpen = useSetRecoilState(toggleLoginModal);
+export const BarItems = ({ isHovered, setIsMenuOpen } : Props) => {
+  const [user, setUser] = useRecoilState(userState)
+  const [_, setIsOpen] = useRecoilState(loginModalState)
+
+  const handleModalToggle = (event: React.MouseEvent) => {
+      setIsOpen(prev => !prev);
+  };
+  
 
   const HoverBarItems = isHovered ? (
     <>
@@ -23,13 +28,14 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
         </Link>
       </div>
       <div
+        id='profile-div'
         className="h-fit flex items-center cursor-pointer
-
-                  md:mb-8"
-        onClick={handleIsModalOpen}
-      >
-        <img src={user.image} alt="" className="h-12" />
-        <span>{user.nickname}</span>
+                  
+                  md:mb-8" 
+        onClick={handleModalToggle}>
+        <img src={user.image} alt="" className='h-12'/>
+        <span>{user.isLoggedIn? user.nickname : <button className='login-button'>Login</button>}</span>
+        {user.isLoggedIn && <button className='login-button'>로그아웃</button>}
       </div>
     </>
   ) : (
@@ -42,8 +48,8 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
           <img src="/images/icons/search_icon.png" className="mt-5" />
         </Link>
       </div>
-      <div className="mb-8 cursor-pointer" onClick={handleIsModalOpen}>
-        <img src={user.image} alt="user_image" className="h-12" />
+      <div className="mb-8 cursor-pointer" onClick={handleModalToggle}>
+        <img src={user.image} alt="" className='h-12'/>
       </div>
     </>
   );
