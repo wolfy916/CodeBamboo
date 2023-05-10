@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from 'react-query';
-import { TopicItem } from '@/components/TopicItem';
 import { UserItem } from '@/components/UserItem';
 import { useRecoilState } from 'recoil';
 import { userDefault, userState } from '@/recoil/user';
@@ -8,6 +7,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import useIsMobile from '@/hooks/useIsMobile';
 import useIsClient from '@/hooks/useIsClient';
+import { TopicList } from '../topic/TopicList';
 
 // <<query 전략을 정의한다.>>
 
@@ -85,7 +85,8 @@ export default function Main() {
           </button>
         </>
       )}
-      <TopicItem />
+      <p className="text-4xl">Popular</p>
+      <TopicList />
       <UserItem />
     </div>
   );
