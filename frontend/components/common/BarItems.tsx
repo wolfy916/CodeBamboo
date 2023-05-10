@@ -64,7 +64,7 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
 
   const MenuOpenBackground = (
     <div
-      className="bg-transparent z-8 absolute top-0 right-0 w-full h-screen
+      className="bg-transparent absolute top-0 right-0 w-full h-screen
               md:hidden"
       onClick={() => setIsMenuOpen(false)}
     ></div>

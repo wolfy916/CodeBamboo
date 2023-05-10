@@ -44,31 +44,33 @@ export const articleState = atom<ArticleObject>({
 });
 
 export interface LeafObject {
-  leaf_id: string; // number
+  leaf_id: number;
   nickname: string;
   title: string;
   content: string;
   step: number;
   ref_order: number;
-  parent_leaf_id: string; // number
+  parent_leaf_id: number;
   exportCnt: number;
   likeCnt: number;
   type: number;
   is_root: boolean;
   codes: CodeObject[];
+  user_id: number;
 }
 
 export const LeafState = atom<LeafObject[]>({
   key: 'LeafState',
   default: [
     {
-      leaf_id: '6',
+      leaf_id: 6,
+      user_id: 7,
       nickname: '태형',
       title: '헬로우',
       content: '마이네임',
       step: 1,
       ref_order: 0,
-      parent_leaf_id: '2',
+      parent_leaf_id: 2,
       exportCnt: 6,
       likeCnt: 5,
       type: 1,
@@ -77,3 +79,16 @@ export const LeafState = atom<LeafObject[]>({
     },
   ],
 });
+
+export interface selectedObject {
+  leaf_id: number;
+  user_id: number;
+}
+
+export const selectedLeafState = atom<selectedObject>({
+  key: 'selectedLeafState',
+  default: {
+    user_id: 999,
+    leaf_id: 999,
+  },
+})

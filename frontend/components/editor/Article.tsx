@@ -2,14 +2,14 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { articleState, codeState } from '@/recoil/topic';
+import { articleState, codeState, selectedLeafState } from '@/recoil/topic';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import authApi from '@/hooks/api/axios.authorization.instance';
 import { GrFlagFill } from "react-icons/gr";
 
 interface Props {}
 
-const queryFn = async (body:any) => {
+const queryTopicFn = async (body:any) => {
   try {
     const response = await authApi.post('topic/', body);
     return response.data;
@@ -18,10 +18,21 @@ const queryFn = async (body:any) => {
   }
 };
 
+const queryLeafFn = async (body:any) => {
+  try {
+    const response = await authApi.post('leaf/', body);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const Article = ({}: Props) => {
   const router = useRouter();
+  const topicId = router.query.topicId;
   const [article, setArticle] = useRecoilState(articleState);
   const code = useRecoilValue(codeState);
+  const selectedLeaf = useRecoilValue(selectedLeafState);
   const [localArticle, setLocalArticle] = useState(article)
   const [needHelp, setNeedHelp] = useState(false)
   const { register, handleSubmit } = useForm({
@@ -31,10 +42,14 @@ export const Article = ({}: Props) => {
     },
   });
 
-  const mutateTopic = useMutation((body: any) => queryFn(body), {
+  const mutateTopic = useMutation((body: any) => queryTopicFn(body), {
     onSuccess:(topicId)=>{
       router.push(`/topics/${topicId}`)
     }
+  })
+
+  const mutateLeaf = useMutation((body: any) => queryLeafFn(body), {
+    onSuccess: () => {}
   })
 
   useEffect(() => {
@@ -42,12 +57,25 @@ export const Article = ({}: Props) => {
   }, [article])
 
   const onSubmit = (data:any) => {
-    const body = {
-      ...data, 
-      codes: code,
-      needHelp: needHelp,
+    // 토픽 생성 (선택된 리프가 없는 경우)
+    if (!selectedLeaf.leaf_id) {
+      const body = {
+        ...data, 
+        codes: code,
+        needHelp: needHelp,
+      }
+      mutateTopic.mutate(body)
     }
-    mutateTopic.mutate(body)
+    // 리프 생성 (선택된 리프가 존재하는 경우)
+    else {
+      const body = {
+        ...data, 
+        codes: code,
+        parent_leaf_id: selectedLeaf.leaf_id,
+        topic_id: topicId,
+      }
+      mutateLeaf.mutate(body)
+    }
   };
 
   const handleInputChange = useCallback(
@@ -96,7 +124,7 @@ export const Article = ({}: Props) => {
           <button
             className='bamboo-button'
           >
-            Submit
+            {!selectedLeaf.leaf_id ? 'Submit' : 'Reply'}
           </button>
         </div>
       </form>

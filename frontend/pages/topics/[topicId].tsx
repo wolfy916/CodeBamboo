@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
-import { codeState, LeafState } from '@/recoil/topic';
+import { codeState, LeafState, selectedLeafState } from '@/recoil/topic';
 import Editor from '@/components/editor/Editor';
 import { Log } from '@/components/editor/Log';
 import authApi from '@/hooks/api/axios.authorization.instance';
@@ -13,6 +13,7 @@ export const TopicDetail = ({}: Props) => {
   const router = useRouter();
   const topicId = router.query.topicId;
   const setCode = useSetRecoilState(codeState);
+  const setSelectedLeaf = useSetRecoilState(selectedLeafState);
   const setLeafs = useSetRecoilState(LeafState);
 
   const queryFn = async (topicId:any) => {
@@ -27,7 +28,8 @@ export const TopicDetail = ({}: Props) => {
 
   const getTopic = useQuery(['topic', topicId], ()=>queryFn(topicId), {
     onSuccess: (data) => {
-      setCode(data.rootLeaf.codes)
+      setCode(data.bestLeaf.codes)
+      setSelectedLeaf({user_id: data.bestLeaf.user_id, leaf_id: data.bestLeaf.leaf_id})
       setLeafs(data.leafs)
     },
   });
