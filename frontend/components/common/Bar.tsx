@@ -3,13 +3,13 @@ import Link from 'next/link';
 import useIsMobile from '@/hooks/useIsMobile';
 import useIsClient from '@/hooks/useIsClient';
 import { BarItems } from './BarItems';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { isHomeState } from '@/recoil/isHome';
 
 export const Bar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [isHome, _] = useRecoilState(isHomeState);
+  const isHome = useRecoilValue(isHomeState);
   const isMobile = useIsMobile();
   const isClient = useIsClient();
 
