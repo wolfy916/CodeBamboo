@@ -8,14 +8,13 @@ interface Props {
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const BarItems = ({ isHovered, setIsMenuOpen } : Props) => {
-  const [user, setUser] = useRecoilState(userState)
-  const [_, setIsOpen] = useRecoilState(loginModalState)
+export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
+  const [user, setUser] = useRecoilState(userState);
+  const [_, setIsOpen] = useRecoilState(loginModalState);
 
   const handleModalToggle = (event: React.MouseEvent) => {
-      setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   };
-  
 
   const HoverBarItems = isHovered ? (
     <>
@@ -28,28 +27,37 @@ export const BarItems = ({ isHovered, setIsMenuOpen } : Props) => {
         </Link>
       </div>
       <div
-        id='profile-div'
+        id="profile-div"
         className="h-fit flex items-center cursor-pointer
                   
-                  md:mb-8" 
-        onClick={handleModalToggle}>
-        <img src={user.image} alt="" className='h-12'/>
-        <span>{user.isLoggedIn? user.nickname : <button className='login-button'>Login</button>}</span>
-        {user.isLoggedIn && <button className='login-button'>로그아웃</button>}
+                  md:mb-8"
+        onClick={handleModalToggle}
+      >
+        <img src={user.image} alt="" className="h-12" />
+        <span>
+          {user.isLoggedIn ? (
+            user.nickname
+          ) : (
+            <button className="login-button">Login</button>
+          )}
+        </span>
+        {user.isLoggedIn && <button className="login-button">로그아웃</button>}
       </div>
     </>
   ) : (
     <>
       <div className="flex flex-col items-center">
         <Link href={'/topics'}>
-          <img src="/images/icons/new_icon.png" className="mt-5" />
+          {' '}
+          <img src="/images/icons/new_icon.png" className="mt-5" />{' '}
         </Link>
         <Link href={'/search'}>
-          <img src="/images/icons/search_icon.png" className="mt-5" />
+          {' '}
+          <img src="/images/icons/search_icon.png" className="mt-5" />{' '}
         </Link>
       </div>
       <div className="mb-8 cursor-pointer" onClick={handleModalToggle}>
-        <img src={user.image} alt="" className='h-12'/>
+        <img src={user.image} alt="" className="h-12" />
       </div>
     </>
   );
