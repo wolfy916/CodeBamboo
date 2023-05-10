@@ -88,7 +88,7 @@ export const Article = ({}: Props) => {
         />
         <div className='flex flex-row place-self-end gap-3'>
           <div
-            className={`bamboo-button w-20 min-h-full flex justify-center items-center hover:bg-red-600 ${!needHelp ? 'bg-rose-500' : 'bg-rose-300 shadow-inner' }`}
+            className={`bamboo-button w-20 min-h-full flex justify-center items-center hover:bg-red-600 ${!needHelp ? 'bg-rose-300' : 'bg-rose-500 shadow-inner' }`}
             onClick={()=>setNeedHelp((prev)=>!prev)}
           >
             {!needHelp ? `Help!` : <GrFlagFill/> }

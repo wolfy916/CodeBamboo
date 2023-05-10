@@ -113,11 +113,11 @@
 }
 
 .article-input {
-  @apply bg-gray-100 rounded-sm w-full mt-1 mb-3 p-2 cursor-text shadow-md;;
+  @apply bg-gray-100 rounded-sm w-full mt-1 mb-3 p-2 cursor-text shadow-md;
 }
 
 .editor-tab {
-  @apply shrink-0 h-auto m-2 rounded-md flex items-center justify-center;
+  @apply shrink-0 h-auto m-2 rounded-md flex items-center justify-center cursor-pointer shadow-sm;
 }
 
 .bgImg-position {
@@ -134,5 +134,5 @@
 .scroll-arrow {
   background-image: url('/images/scroll-arrow.png');
   background-size: contain;
-  background-repeat: no-repeat; cursor-pointer shadow-sm;
+  background-repeat: no-repeat; 
 }

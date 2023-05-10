@@ -71,7 +71,7 @@ export const Editor = () => {
   };
 
   return (
-    <div className='flex h-full
+    <div className='flex h-full w-full
                     flex-col
                     md:flex-row'>
       <div className='flex flex-col h-full

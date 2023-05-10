@@ -207,7 +207,7 @@ export class TopicsService {
       // console.log(newCodes);
       await this.codeRepository.save(newCodes);
     }
-    return newTopic.topic_id
+    return newTopic.topic_id;
   }
 
   async deleteOne(id: number): Promise<void> {
