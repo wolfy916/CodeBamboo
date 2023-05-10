@@ -55,7 +55,7 @@ export const Bar = () => {
                   ${isHome ? 'absolute top-[700vh]' : 'relative'} w-screen
                   md:flex-col md:justify-normal md:w-24 md:h-screen md:text-black md:bg-white
                   md:hover:w-48 md:transition-w md:duration-500 md:ease-in-out
-                  ${isHome ? 'md:top-[700vh]' : 'md:bottom-0'}`}
+                  ${isHome ? 'md:relative md:top-[700vh]' : 'md:bottom-0'}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
