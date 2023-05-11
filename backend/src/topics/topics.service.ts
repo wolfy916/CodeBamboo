@@ -103,11 +103,13 @@ export class TopicsService {
     });
     const userTopics = await this.topicRepository.find({
       relations: {
+        user: true,
         rootLeaf: { codes: true, user: true, likes: true },
         bestLeaf: { codes: true, user: true, likes: true },
       },
       where: { user: { nickname: Like(`%${userInput}%`) } },
     });
+    // console.log(userTopics);
     //닉네임이나 타이틀로 검색 안되면 []로 들어와서 길이를 재서 유무 판별
     if (userTopics.length == 0 && titleTopics.length == 0) {
       throw new NotFoundException(
@@ -155,12 +157,12 @@ export class TopicsService {
     return response;
   }
 
-  async create(data): Promise<void> {
+  async create(data, userId): Promise<number> {
     //1.dto가 아닌 그냥 json파일 받아오기
     // console.log(data);
 
     //2. user와 needHelp를 분리
-    const user = { user: { user_id: data.user_id } };
+    const user = { user: { user_id: userId } };
     const need_help = { needHelp: data.needHelp };
     //3.분리한 것으로 topic생성
     const topic = { ...user, ...need_help };
@@ -207,6 +209,7 @@ export class TopicsService {
       // console.log(newCodes);
       await this.codeRepository.save(newCodes);
     }
+    return newTopic.topic_id;
   }
 
   async deleteOne(id: number): Promise<void> {
