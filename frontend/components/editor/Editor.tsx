@@ -19,7 +19,7 @@ export const Editor = () => {
 
   useEffect(() => {
     if (isMobile) return;
-    setSelectedLanguage(code[0].language);
+    setSelectedLanguage(code[0]?.language);
   }, [isMobile]);
   
   useEffect(() => {

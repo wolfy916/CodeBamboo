@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { loginModalState, userState } from '@/recoil/user';
 import { useRouter } from 'next/router';
 
@@ -10,8 +10,8 @@ interface Props {
 }
 
 export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
-  const [user, setUser] = useRecoilState(userState);
-  const [_, setIsOpen] = useRecoilState(loginModalState);
+  const user = useRecoilValue(userState);
+  const setIsOpen = useSetRecoilState(loginModalState);
   const router = useRouter()
 
   const handleModalToggle = (event: React.MouseEvent) => {
