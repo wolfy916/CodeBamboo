@@ -2,18 +2,18 @@ import React from 'react';
 import { Bar } from './Bar';
 
 interface Props {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 
 export const Layout = ({ children }: Props) => {
-  return (
-    <div
-      className="flex h-screen w-screen
+    return (
+        <div
+            className="flex h-screen w-screen
                     flex-col 
                     md:flex-row"
-    >
-      <Bar />
-      <main className="h-full w-full">{children}</main>
-    </div>
-  );
+        >
+            <Bar />
+            <main className="h-full w-full flex flex-col">{children}</main>
+        </div>
+    );
 };

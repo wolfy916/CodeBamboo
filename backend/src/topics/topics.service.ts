@@ -51,7 +51,7 @@ export class TopicsService {
     popular.sort((a, b) => {
       return b.value - a.value;
     });
-    console.log(popular);
+    // console.log(popular);
     const trending = getall.map((data) => trendingTopic(data));
     // console.log(trending);
     trending.sort((a, b) => {

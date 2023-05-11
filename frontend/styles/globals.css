@@ -4,115 +4,117 @@
 @tailwind utilities;
 
 .CodeMirror {
-  height: 100% !important;
+    height: 100% !important;
 }
 
 @layer components {
-  /* 모달 컴포넌트 클래스들 */
-  .modal-wrapper {
-    @apply flex flex-col border border-transparent shadow-md rounded-xl fixed inset-0 m-auto bg-white z-10 tracking-wider bg-blue-400 justify-center items-center;
-  }
+    /* 모달 컴포넌트 클래스들 */
+    .modal-wrapper {
+        @apply flex flex-col border border-transparent shadow-md rounded-xl fixed inset-0 m-auto bg-white z-10 tracking-wider bg-blue-400 justify-center items-center;
+    }
+    .search-modal-wrapper {
+        @apply rounded-xl fixed left-4 right-4 top-20 m-auto z-10  items-center;
+    }
 
-  .modal-wrapper-hidden {
-    @apply hidden;
-  }
+    .modal-wrapper-hidden {
+        @apply hidden;
+    }
 
-  .close-button {
-    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
-  }
+    .close-button {
+        @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
+    }
 
-  .bgImg-bamboo {
-    background-image: url('/images/bg-bamboo.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
+    .bgImg-bamboo {
+        background-image: url('/images/bg-bamboo.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
 
-  /* 시맨틱 컴포넌트를 위한 클래스들 */
-  .wrapper {
-    @apply flex flex-col items-center justify-center;
-  }
+    /* 시맨틱 컴포넌트를 위한 클래스들 */
+    .wrapper {
+        @apply flex flex-col items-center justify-center;
+    }
 
-  .line {
-    @apply w-6/4 border border-solid border-opacity-5;
-  }
+    .line {
+        @apply w-6/4 border border-solid border-opacity-5;
+    }
 
-  .pink-button {
-    @apply h-8 text-white text-xs font-semibold bg-pink-300 border-none rounded px-4 mx-2 cursor-pointer;
-  }
+    .pink-button {
+        @apply h-8 text-white text-xs font-semibold bg-pink-300 border-none rounded px-4 mx-2 cursor-pointer;
+    }
 
-  .bamboo-button {
-    @apply h-fit w-fit py-3 px-4 bg-bamboo text-white rounded-lg;
-  }
+    .bamboo-button {
+        @apply h-fit w-fit py-3 px-4 bg-bamboo text-white rounded-lg;
+    }
 
-  .header {
-    @apply flex flex-col bg-orange-300 ;
-  }
+    .header {
+        @apply flex flex-col bg-orange-300;
+    }
 
-  .main {
-    @apply bg-red-300 flex flex-col;
-  }
+    .main {
+        @apply bg-red-300 flex flex-col;
+    }
 
-  .article {
-    @apply flex flex-col bg-green-300;
-  }
+    .article {
+        @apply flex flex-col bg-green-300;
+    }
 
-  .section {
-    @apply flex flex-col bg-blue-300;
-  }
-  
-  .footer {
-    @apply flex justify-between items-center;
-  }
+    .section {
+        @apply flex flex-col bg-blue-300;
+    }
 
-  .overlay {
-    @apply absolute w-full h-full flex flex-col justify-center items-center z-10;
-  }
+    .footer {
+        @apply flex justify-between items-center;
+    }
 
+    .overlay {
+        @apply absolute w-full h-full flex flex-col justify-center items-center z-10;
+    }
 }
 
 @screen md {
-  .modal-wrapper {
-    @apply w-3/4 h-5/6 max-w-screen-lg
-  }
+    .modal-wrapper {
+        @apply w-3/4 h-5/6 max-w-screen-lg;
+    }
 
-  .wrapper {
-    @apply w-5/12;
-  }
+    .wrapper {
+        @apply w-5/12;
+    }
 
-  .header {
-    @apply w-4/5;
-  }
+    .header {
+        @apply w-4/5;
+    }
 
-  .main {
-    @apply w-4/5 h-4/5
-  }
+    .main {
+        @apply w-4/5 h-4/5;
+    }
 
-  .article {
-    @apply w-3/5;
-  }
+    .article {
+        @apply w-3/5;
+    }
 
-  .section {
-    @apply w-4/5;
-  }
+    .section {
+        @apply w-4/5;
+    }
 
-  /* .footer {
+    /* .footer {
     @apply w-4/5;
   } */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .article-input {
-  @apply bg-gray-100 rounded-sm w-full mt-1 mb-3 p-2
+    @apply bg-gray-100 rounded-sm w-full mt-1 mb-3 p-2;
 }
 
 .editor-tab {
-  @apply shrink-0 h-auto m-2 rounded-md flex items-center justify-center
+    @apply shrink-0 h-auto m-2 rounded-md flex items-center justify-center;
 }
