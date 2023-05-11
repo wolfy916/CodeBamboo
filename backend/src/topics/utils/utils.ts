@@ -2,6 +2,7 @@ import { Timestamp } from 'typeorm';
 
 export function makeLeaf(data) {
   const nickname = { nickname: data.user.nickname };
+  const image = { image: data.user.image };
   const title = { title: data.title };
   const content = { content: data.content };
   const type = { type: data.type };
@@ -12,6 +13,7 @@ export function makeLeaf(data) {
   const response = {
     ...nickname,
     ...title,
+    ...image,
     ...content,
     ...type,
     ...codes,
