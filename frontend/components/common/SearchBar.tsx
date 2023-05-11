@@ -12,15 +12,13 @@ type State = {
     text: string;
 };
 
-function SearchModal() {
-    const SearchModal = useRecoilValue(searchModalState);
-    const handleIsSearchModalOpen = useSetRecoilState(toggleSearchModal);
+function SearchBar() {
     const [inputValue, setInputValue] = useRecoilState(searchInputState);
-    const [searchInput, setSearchInput] = useState<String>('');
+    const [searchInput, setSearchInput] = useState<String>(
+        inputValue.inputValue
+    );
     const router = useRouter();
-    console.log(SearchModal.isOpen);
     const modalWrapperClasses = `
-        ${SearchModal.isOpen ? '' : 'hidden'}
         search-modal-wrapper
     `;
 
@@ -28,10 +26,7 @@ function SearchModal() {
         setSearchInput(e.target.value);
     };
     const handleSubmit = () => {
-        setInputValue((prev) => ({ ...prev, inputValue: searchInput }));
-        handleIsSearchModalOpen({
-            isOpen: false,
-        });
+        setInputValue({ inputValue: searchInput });
         router.push('/search');
     };
     const handleKeyPress = (e) => {
@@ -55,10 +50,11 @@ function SearchModal() {
                 className="bg-black ml-3 mr-4 focus:outline-none text-white text-3xl w-full h-full"
                 onChange={handleChange}
                 onKeyUp={handleKeyPress}
+                value={searchInput}
                 autoFocus
             ></input>
         </div>
     );
 }
 
-export default SearchModal;
+export default SearchBar;

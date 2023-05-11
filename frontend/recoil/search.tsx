@@ -31,3 +31,25 @@ export const searchInputState = atom<SearchInput>({
         inputValue: '',
     },
 });
+
+interface topicTogle {
+    togleValue: boolean;
+}
+
+export const topicTogleState = atom<topicTogle>({
+    key: 'topicTogleState', // 선언명과 같지 않아도 됨, 그래도 통일하면 좋을 듯
+    default: {
+        togleValue: true,
+    },
+});
+
+interface newTogle {
+    togleValue: boolean;
+}
+
+export const newTogleState = atom<newTogle>({
+    key: 'newTogleState', // 선언명과 같지 않아도 됨, 그래도 통일하면 좋을 듯
+    default: {
+        togleValue: true,
+    },
+});
