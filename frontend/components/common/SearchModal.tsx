@@ -18,7 +18,7 @@ function SearchModal() {
     const [inputValue, setInputValue] = useRecoilState(searchInputState);
     const [searchInput, setSearchInput] = useState<String>('');
     const router = useRouter();
-    console.log(SearchModal.isOpen);
+    // console.log(SearchModal.isOpen);
     const modalWrapperClasses = `
         ${SearchModal.isOpen ? '' : 'hidden'}
         search-modal-wrapper

@@ -19,8 +19,7 @@ function SearchBar() {
     );
     const router = useRouter();
     const modalWrapperClasses = `
-        search-modal-wrapper
-    `;
+        search-modal-wrapper`;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(e.target.value);
