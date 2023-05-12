@@ -71,7 +71,7 @@ export class AuthService {
     // [3]. 토큰 생성
     const payload = { user_id: user.user_id, nickname: user.nickname }
     const access_token = this.jwtService.sign(payload, {secret:process.env.SECRET })
-    const refresh_token = this.jwtService.sign(payload, {expiresIn:'1d', secret:process.env.SECRET})
+    const refresh_token = this.jwtService.sign(payload, {expiresIn:'30d', secret:process.env.SECRET})
 
     return {
       refresh_token,
@@ -81,7 +81,7 @@ export class AuthService {
         image: user.image,
         provider,
         email: user.email || `${user.nickname}@codeBamboo.site`,
-        introduce: user.introduce,
+        introduce: user.introduce || 'Hello, Bamboos!',
         user_id : Number(user.user_id)
       }
     };

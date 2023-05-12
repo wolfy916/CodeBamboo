@@ -59,7 +59,6 @@ export class TopicsController {
   //   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
   //     this.usersService.update(id, updateUserDto);
   //   }
-
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   delete(@Param('id') id: number) {
