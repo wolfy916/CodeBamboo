@@ -1,6 +1,7 @@
 export function makeLeaf(data) {
   const leaf_id = { leaf_id: data.leaf_id };
   const nickname = { nickname: data.user.nickname };
+  const image = { image: data.user.image };
   const title = { title: data.title };
   const content = { content: data.content };
   const type = { type: data.type };
@@ -13,6 +14,7 @@ export function makeLeaf(data) {
     ...leaf_id,
     ...user_id,
     ...nickname,
+    ...image,
     ...title,
     ...content,
     ...type,

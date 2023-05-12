@@ -69,7 +69,7 @@ export class LeafsService {
   }
 
   async create(data, userId): Promise<void> {
-    // console.log(data);
+    console.log(data);
     //user와 topic에 맞추어줌.
     const user = { user: { user_id: userId } };
     const topicId = { topic: { topic_id: data.topic_id } };
@@ -131,6 +131,7 @@ export class LeafsService {
 
     //재정의한 객체를 leaf에 저장
     const createLeaf = await this.leafRepository.save(json);
+    // const saveLeaf = await this.leafRepository.save(createLeaf);
     //leaf_id 가져오기
     const leaf_id = createLeaf.leaf_id;
 
