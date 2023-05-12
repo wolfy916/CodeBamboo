@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { CodeInF } from './TopicInterface';
+import { useRouter } from 'next/router';
 
 interface Props {
   codes: CodeInF[];
+  topic_id: string;
 }
 
-export const TopicItemRendering = ({ codes }: Props) => {
+export const TopicItemRendering = ({ codes, topic_id }: Props) => {
+  const router = useRouter();
   const [src, setSrc] = useState('');
   const html = codes.find((e) => e.language === 'HTML')?.content;
   const css = codes.find((e) => e.language === 'CSS')?.content;
@@ -28,7 +31,10 @@ export const TopicItemRendering = ({ codes }: Props) => {
   }, [srcCode]);
 
   return (
-    <div className="h-full w-full">
+    <div
+      className="h-full w-full hover:cursor-pointer"
+      onClick={() => router.push(`/topics/${topic_id}`)}
+    >
       <iframe
         srcDoc={src}
         sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-scripts allow-top-navigation-by-user-activation allow-downloads allow-presentation"

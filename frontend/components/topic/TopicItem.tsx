@@ -38,9 +38,7 @@ export const TopicItem = ({
     >
       {needHelp && needHelpPing}
       <div className="bg-white w-[90%] h-[60%] rounded-xl p-[3%] overflow-hidden">
-        <Link href={`/topics/${topic_id}`}>
-          <TopicItemRendering codes={rootLeaf.codes} />
-        </Link>
+        <TopicItemRendering codes={rootLeaf.codes} topic_id={topic_id} />
       </div>
       <div className="w-[90%] h-[25%] flex justify-evenly">
         <img
