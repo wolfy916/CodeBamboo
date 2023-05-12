@@ -10,7 +10,7 @@ export const Topics = ({}: Props) => {
   const resetArticle = useResetRecoilState(articleState);
   const resetSelectedLeaf = useResetRecoilState(selectedLeafState);
   const resetLeafs = useResetRecoilState(LeafState);
-
+  
   useEffect(() => {
     resetCode()
     resetArticle()

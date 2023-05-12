@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import { loginModalState, userDefault, userState } from '@/recoil/user';
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';

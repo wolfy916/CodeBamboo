@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 
 export interface CodeObject {
-  codeId: number | null;
+  code_id: number | null;
   language: string;
   content: string | null;
 }
@@ -10,17 +10,17 @@ export const codeState = atom<CodeObject[]>({
   key: 'codeState',
   default: [
     {
-      codeId: null,
+      code_id: null,
       language: 'HTML',
       content: '',
     },
     {
-      codeId: null,
+      code_id: null,
       language: 'CSS',
       content: '',
     },
     {
-      codeId: null,
+      code_id: null,
       language: 'JavaScript',
       content: '',
     },

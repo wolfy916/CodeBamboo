@@ -56,7 +56,9 @@ export const Article = ({}: Props) => {
   });
 
   const mutateLeaf = useMutation((body: any) => queryLeafFn(body), {
-    onSuccess: () => {},
+    onSuccess: (topicId) => {
+      router.push(`/topics/${topicId}`);
+    },
   });
 
   useEffect(() => {
@@ -78,9 +80,13 @@ export const Article = ({}: Props) => {
     }
     // 리프 생성 (선택된 리프가 존재하는 경우)
     else {
+      let modifiedCode = code.map(item=>{
+        const {code_id, ...modifiedItem } = item
+        return modifiedItem
+      })
       const body = {
         ...data,
-        codes: code,
+        codes: modifiedCode,
         parent_leaf_id: selectedLeaf.leaf_id,
         topic_id: topicId,
       };
