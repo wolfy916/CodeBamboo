@@ -12,12 +12,13 @@
     .modal-wrapper {
         @apply flex flex-col border border-transparent shadow-md rounded-xl fixed inset-0 m-auto bg-white z-10 tracking-wider bg-blue-400 justify-center items-center;
     }
-    .search-modal-wrapper {
-        @apply rounded-xl fixed left-4 right-4 top-20 m-auto z-10  items-center;
-    }
 
     .modal-wrapper-hidden {
         @apply hidden;
+    }
+
+    .search-modal-wrapper {
+        @apply rounded-xl fixed left-4 right-4 top-20 m-auto z-10  items-center;
     }
 
     .close-button {

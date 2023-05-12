@@ -13,7 +13,7 @@ export const Layout = ({ children }: Props) => {
                     md:flex-row"
         >
             <Bar />
-            <main className="h-full w-full flex flex-col">{children}</main>
+            <main className="h-full w-full">{children}</main>
         </div>
     );
 };
