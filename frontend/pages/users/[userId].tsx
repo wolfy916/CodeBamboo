@@ -1,8 +1,7 @@
 import { useRouter } from "next/router";
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/recoil/user';
-import { OthersPage } from '@/components/user/OthersPage';
-import { MyPage } from '@/components/user/MyPage';
+import ProfilePage from "@/components/user/profilePage";
 
 interface Props {
 }
@@ -16,10 +15,11 @@ export const UserDetail = ({ } : Props) => {
   let stringUserId = Array.isArray(userId) ? userId[0] : userId;
   
   if(stringUserId && +stringUserId !== me.user_id) {
-    return <OthersPage userId={stringUserId}/>
+    return <ProfilePage userId={stringUserId} myPage={false}/>
   } 
-
-  return <MyPage/>
+  if (userId) {
+    return <ProfilePage userId={me.user_id.toString()} myPage={true}/>
+  }
 };
 
 export default UserDetail
