@@ -28,7 +28,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full h-[800vh]">
+    <div className="w-[100%] h-[800vh]">
       <Intro />
       <Main />
     </div>

@@ -27,13 +27,13 @@ export const TopicList = ({ topicList }: Props) => {
 
   return (
     <div
-      className={`w-screen flex 
+      className={`relative w-screen flex scrollbar-hide
                   h-[40vh] ${
                     isMobile
-                      ? 'overflow-y-visible overflow-x-scroll scrollbar-hide'
+                      ? 'overflow-y-visible overflow-x-scroll'
                       : ''
                   }
-                  md:w-full md:h-[50vh] md:justify-center`}
+                  md:w-full md:h-[55vh] md:items-end md:overflow-x-scroll md:px-5`}
     >
       {isClient && topicListItems}
     </div>
