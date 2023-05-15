@@ -47,20 +47,28 @@ export class TopicsService {
     });
     // const popularOne = popularTopic(getall[0]);
     const popular = getall.map((data) => popularTopic(data));
-    // console.log(popular);
     popular.sort((a, b) => {
       return b.value - a.value;
     });
     // console.log(popular);
     const trending = getall.map((data) => trendingTopic(data));
     // console.log(trending);
+    let popularLength = 0;
+    if (popular.length <= 6) {
+      popularLength = popular.length;
+    }
+    if (trending.length <= popularLength) {
+      popularLength = trending.length;
+    } else {
+      popularLength = 6;
+    }
     trending.sort((a, b) => {
       return b.value - a.value;
     });
     // console.log(trending);
     const popularRespone = [];
     const trendingRespone = [];
-    for (let index = 0; index < 6; index++) {
+    for (let index = 0; index < popularLength; index++) {
       const popularOne = await this.topicRepository.findOne({
         relations: {
           user: true,
@@ -154,8 +162,8 @@ export class TopicsService {
     const topic_id = { topic_id: topic.topic_id };
     const needHelp = { needHelp: topic.needHelp };
     const creation_time = { creation_time: topic.creation_time };
-    // const rootLeaf = { rootLeaf: makeTopicLeafs(topic.rootLeaf, user_id) };
-    // const bestLeaf = { bestLeaf: makeTopicLeafs(topic.bestLeaf, user_id) };
+    const rootLeaf = { rootLeaf: makeTopicLeafs(topic.rootLeaf, user_id) };
+    const bestLeaf = { bestLeaf: makeTopicLeafs(topic.bestLeaf, user_id) };
     const leafs = {
       leafs: topic.leafs.map((data) => makeTopicLeafs(data, user_id)),
     };
@@ -163,8 +171,8 @@ export class TopicsService {
       ...topic_id,
       ...needHelp,
       ...creation_time,
-      // ...rootLeaf,
-      // ...bestLeaf,
+      ...rootLeaf,
+      ...bestLeaf,
       ...leafs,
     };
     // console.log(response);

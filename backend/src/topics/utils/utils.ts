@@ -62,6 +62,7 @@ export function makeTopicLeafs(data, my_id: number) {
     ...nickname,
     ...likeCnt,
     ...isLiked,
+    ...isBookmarked,
     ...data,
   };
   // console.log(response);

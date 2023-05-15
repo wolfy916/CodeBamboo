@@ -34,9 +34,9 @@ export const Search = ({}: Props) => {
                 `topic/search?input=${userInput}`
             );
             return response.data;
-        } catch (error) {
+        } catch (data) {
             // console.log(error.response.data.message);
-            setErrorValue(error.response.data.message);
+            setErrorValue(data.response.data.message);
             setIsFound(false);
         }
     };
@@ -77,9 +77,9 @@ export const Search = ({}: Props) => {
                 `leaf/search?input=${userInput}`
             );
             return response.data;
-        } catch (error) {
-            console.log(error.response.data.message);
-            setLeafErrorValue(error.response.data.message);
+        } catch (data) {
+            console.log(data.response.data.message);
+            setLeafErrorValue(data.response.data.message);
             setIsFound(false);
         }
     };
