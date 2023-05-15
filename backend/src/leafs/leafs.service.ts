@@ -57,7 +57,7 @@ export class LeafsService {
 
   async getOne(id: number) {
     const leaf = await this.leafRepository.findOne({
-      relations: { user: true, likes: true, codes: true },
+      relations: { user: true, likes: true, codes: true, topic: true },
       where: { leaf_id: id },
     });
     // console.log(leaf);
@@ -169,12 +169,12 @@ export class LeafsService {
           .where('leaf_id = :leaf_id', { leaf_id: id })
           .execute();
       }
-      if (updateLeafDto.code) {
-        const leafCodeLength = Object.keys(updateLeafDto.code).length;
+      if (updateLeafDto.codes) {
+        const leafCodeLength = Object.keys(updateLeafDto.codes).length;
         type = 1;
 
         for (let index = 0; index < leafCodeLength; index++) {
-          const element = updateLeafDto.code[index];
+          const element = updateLeafDto.codes[index];
           // console.log(element);
           const json = { ...element, ...leaf_id };
           // console.log(json);

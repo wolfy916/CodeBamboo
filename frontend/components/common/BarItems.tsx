@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 import authApi from '@/hooks/api/axios.authorization.instance';
 import useLogout from '@/hooks/auth/useLogout';
+import { toggleSearchModal } from '@/recoil/search';
 
 interface Props {
     isHovered: boolean;

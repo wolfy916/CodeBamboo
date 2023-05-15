@@ -32,7 +32,8 @@ export function makeTopicLeafs(data, my_id: number) {
   const user_id = { user_id: data.user.user_id };
   const likeList = data.likes;
   const bookmarkList = data.bookmarks;
-  // console.log(bookmarkList.length);
+  console.log(bookmarkList.length);
+  let isBookmarked = { isBookmarked: false };
   let isLiked = { isLiked: false };
   const findLiked = () => {
     for (let index = 0; index < likeList.length; index++) {
@@ -43,6 +44,15 @@ export function makeTopicLeafs(data, my_id: number) {
     }
   };
   findLiked();
+  const findBookmarked = () => {
+    for (let index = 0; index < bookmarkList.length; index++) {
+      const element = bookmarkList[index];
+      if (element.user.user_id === my_id) {
+        isBookmarked = { isBookmarked: true };
+      }
+    }
+  };
+  findBookmarked();
   const { user, likes, topic, ...obj } = data;
   const nickname = { nickname: user.nickname };
 
