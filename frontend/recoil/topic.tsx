@@ -1,4 +1,6 @@
+import { mainTopicListInF } from '@/components/topic/TopicInterface';
 import { atom } from 'recoil';
+import { TopicItemInF } from '../components/topic/TopicInterface';
 
 export interface CodeObject {
   code_id: number | null;
@@ -88,4 +90,12 @@ export const selectedLeafState = atom<selectedObject>({
     user_id: null,
     leaf_id: null,
   },
-})
+});
+
+export const mainTopicListState = atom<mainTopicListInF>({
+  key: 'mainTopicListState',
+  default: {
+    popular: [],
+    trending: [],
+  },
+});
