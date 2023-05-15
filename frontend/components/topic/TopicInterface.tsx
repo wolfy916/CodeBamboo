@@ -5,6 +5,7 @@ export interface CodeInF {
 }
 
 export interface LeafItemInF {
+  user_id: number;
   nickname: string;
   title: string;
   content: string;
@@ -22,4 +23,9 @@ export interface TopicItemInF {
   creation_time: Date;
   rootLeaf: LeafItemInF;
   bestLeaf: LeafItemInF;
+}
+
+export interface mainTopicListInF {
+  popular: TopicItemInF[];
+  trending: TopicItemInF[];
 }
