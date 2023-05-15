@@ -21,7 +21,6 @@ import { Request } from 'express';
 export class TopicsController {
   constructor(private readonly topicsService: TopicsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   getAll(): Promise<SimpleTopicDto[]> {
     return this.topicsService.getAll();
