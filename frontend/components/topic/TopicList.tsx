@@ -31,7 +31,6 @@ export const TopicList = ({ topicList }: Props) => {
 
   function rightArrowClickHandler() {
     setViewPart((prev) => prev + 1);
-    console.log(viewPart);
   }
 
   function leftArrowClickHandler() {
