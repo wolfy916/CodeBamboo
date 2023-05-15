@@ -18,7 +18,7 @@ export const Search = ({}: Props) => {
     const [errorValue, setErrorValue] = useState('');
     const [isFound, setIsFound] = useState(true);
     const [leafErrorValue, setLeafErrorValue] = useState('');
-    // const [iLeafFound, setIsLeafFound] = useState(true);
+    const [isLeafFound, setIsLeafFound] = useState(true);
     const isTopic = useRecoilValue(topicTogleState);
     console.log(isTopic);
     const [searchTopicItems, setSearchTopicItems] = useState(
@@ -46,9 +46,9 @@ export const Search = ({}: Props) => {
         {
             onSuccess: (data) => {
                 if (data) {
-                    console.log(data);
+                    // console.log(data);
                     setSearchTopicItems(
-                        data.slice(0, 3).map((obj, idx: number) => {
+                        data.map((obj, idx: number) => {
                             return (
                                 <TopicItem
                                     topic_id={obj.topic_id}
@@ -89,22 +89,22 @@ export const Search = ({}: Props) => {
         {
             onSuccess: (data) => {
                 if (data) {
-                    console.log(data);
-                    // setSearchLeafItems(
-                    //     data.slice(0, 3).map((obj, idx: number) => {
-                    //         return (
-                    //             <TopicItem
-                    //                 topic_id={obj.topic_id}
-                    //                 needHelp={obj.needHelp}
-                    //                 creation_time={obj.creation_time}
-                    //                 rootLeaf={obj.rootLeaf}
-                    //                 bestLeaf={obj.bestLeaf}
-                    //                 key={idx}
-                    //             />
-                    //         );
-                    //     })
-                    // ),
-                    // setIsLeafFound(true);
+                    // console.log(data);
+                    setSearchLeafItems(
+                        data.map((obj, idx: number) => {
+                            return (
+                                <TopicItem
+                                    topic_id={obj.topic_id}
+                                    needHelp={false}
+                                    creation_time={obj.creation_time}
+                                    rootLeaf={obj}
+                                    bestLeaf={obj}
+                                    key={idx}
+                                />
+                            );
+                        })
+                    ),
+                        setIsLeafFound(true);
                 }
             },
             onError: (data) => {
@@ -115,36 +115,54 @@ export const Search = ({}: Props) => {
 
     const TopicList = () => {
         return isFound ? (
+            //토픽 찾았을 때
             <div
-                className={`w-screen flex 
-          h-[40vh] ${
+                className={`w-screen 
+          h-full bg-white ${
               isMobile
-                  ? 'overflow-y-visible overflow-x-scroll scrollbar-hide'
+                  ? 'overflow-x-visible overflow-y-scroll scrollbar-hide'
                   : ''
           }
-          md:w-full md:h-[50vh] md:justify-center`}
+          md:w-full md:h-full md:justify-center md:grid md:grid-cols-3`}
             >
                 {searchTopicItems}
             </div>
         ) : (
-            errorValue
+            //토픽 찾지 못했을 때
+            <div className="bg-white place-item-center h-full w-full ">
+                <img
+                    src="/images/404Icon.png"
+                    className="md:mt-20 md:mx-20 border border-black md:h-30"
+                ></img>
+                <div className="border border-black justify-center content-center">
+                    토픽에서는 {errorValue}
+                </div>
+            </div>
         );
     };
     const LeafList = () => {
-        return isFound ? (
+        return isLeafFound ? (
             <div
-                className={`w-screen flex 
-          h-[40vh] ${
+                className={`w-screen 
+          h-full bg-white ${
               isMobile
-                  ? 'overflow-y-visible overflow-x-scroll scrollbar-hide'
+                  ? 'overflow-x-visible overflow-y-scroll scrollbar-hide'
                   : ''
           }
-          md:w-full md:h-[50vh] md:justify-center`}
+          md:w-full md:h-full md:justify-center md:grid md:grid-cols-3`}
             >
                 {searchLeafItems}
             </div>
         ) : (
-            leafErrorValue
+            <div className="bg-white place-item-center h-full w-full ">
+                <img
+                    src="/images/404Icon.png"
+                    className="md:mt-20 md:mx-20 border border-black md:h-30"
+                ></img>
+                <div className="border border-black justify-center content-center">
+                    리프에서는 {leafErrorValue}
+                </div>
+            </div>
         );
     };
 
@@ -153,12 +171,12 @@ export const Search = ({}: Props) => {
         // console.log('inputValue바뀜');
     }, [inputValue, errorValue, leafErrorValue]);
     return (
-        <div className="h-full md:w-full bg-white">
+        <div className="h-full w-full md:w-full bg-yellow-200">
             <header
                 className="header h-20 bg-white
                               md:h-24 md:w-[96%] md:mx-[2%]"
             ></header>
-            <main className="main md:w-[96%] md:mx-[2%] bg-white">
+            <main className="main md:w-[96%] md:mx-[2%] md:h-[90%] ">
                 <SearchTogle />
                 {isTopic.togleValue ? TopicList() : LeafList()}
             </main>

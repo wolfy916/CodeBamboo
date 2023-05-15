@@ -44,7 +44,7 @@ export class LeafsService {
     //닉네임이나 타이틀로 검색 안되면 []로 들어와서 길이를 재서 유무 판별
     if (userLeafs.length == 0 && titleLeafs.length == 0) {
       throw new NotFoundException(
-        `'${userInput}'라는 검색결과를 찾을 수 없습니다.`,
+        `'${userInput}'(이)라는 검색결과를 찾을 수 없습니다.`,
       );
     } else if (userLeafs.length > 0) {
       const user = userLeafs.map((data) => makeLeaf(data));
@@ -69,7 +69,7 @@ export class LeafsService {
   }
 
   async create(data, userId): Promise<void> {
-    console.log(data);
+    // console.log(data);
     //user와 topic에 맞추어줌.
     const user = { user: { user_id: userId } };
     const topicId = { topic: { topic_id: data.topic_id } };
