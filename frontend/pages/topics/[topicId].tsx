@@ -29,8 +29,8 @@ export const TopicDetail = ({}: Props) => {
 
   const getTopic = useQuery(['topic', topicId], () => queryFn(topicId), {
     onSuccess: (data) => {
-      setCode(data.bestLeaf.codes)
-      setArticle({title:data.bestLeaf.title, content:data.bestLeaf.content})
+      setCode(data?.bestLeaf.codes)
+      setArticle({title:data?.bestLeaf.title, content:data?.bestLeaf.content})
       setSelectedLeaf({user_id: data?.bestLeaf.user_id, leaf_id: data?.bestLeaf.leaf_id})
       setLeafs(data?.leafs)
     },
