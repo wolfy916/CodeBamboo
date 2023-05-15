@@ -38,16 +38,6 @@ export default function Main() {
         Trending
       </p>
       <TopicList topicList={mainTopicList.trending.slice(0, 6)} />
-      <p
-        className="m-5
-                  text-3xl
-                  md:mx-20 md:mt-7 md:text-5xl"
-      >
-        Interesting people
-        {isMobile ? <br /> : ' '}
-        to follow
-      </p>
-      <UserItem />
     </div>
   );
 }

@@ -1,11 +1,10 @@
-import React from "react";
-import Link from "next/link";
-import { TopicItemInF } from "./TopicInterface";
-import useIsMobile from "@/hooks/useIsMobile";
-import Image from "next/image";
-import HandImage from "@/public/images/hand.png";
-import { useRouter } from "next/router";
-import { TopicItemRendering } from "./TopicItemRendering";
+import React from 'react';
+import Link from 'next/link';
+import { TopicItemInF } from './TopicInterface';
+import Image from 'next/image';
+import HandImage from '@/public/images/hand.png';
+import { useRouter } from 'next/router';
+import { TopicItemRendering } from './TopicItemRendering';
 
 interface Props extends TopicItemInF {
   key: number;
