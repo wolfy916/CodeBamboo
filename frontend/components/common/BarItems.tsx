@@ -1,32 +1,23 @@
 import React from 'react';
 import Link from 'next/link';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import { loginModalState, userDefault, userState } from '@/recoil/user';
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 import authApi from '@/hooks/api/axios.authorization.instance';
-import { toggleSearchModal } from '@/recoil/search';
+import useLogout from '@/hooks/auth/useLogout';
 
 interface Props {
     isHovered: boolean;
     setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const queryFn = async () => {
-    // 로그아웃 하시겠습니까? 로직 추가..
-    try {
-        const response = await authApi.post('auth/logout');
-        return response.data;
-    } catch (error) {
-        console.error(error);
-    }
-};
-
 export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
     const [user, setUser] = useRecoilState(userState);
-    const [_, setIsOpen] = useRecoilState(loginModalState);
-    const handleIsSearchModalOpen = useSetRecoilState(toggleSearchModal);
+    const setIsOpen = useSetRecoilState(loginModalState);
     const router = useRouter();
+
+    const logoutMutaion = useLogout();
 
     const handleModalToggle = (event: React.MouseEvent) => {
         setIsOpen((prev) => !prev);
@@ -34,16 +25,6 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
     const serveUserpage = () => {
         router.push(`/users/${user.user_id}`);
     };
-
-    const logoutMutation = useMutation(queryFn, {
-        onSuccess: (data) => {
-            console.log(data);
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('provider');
-            setUser(userDefault);
-            router.push('/');
-        },
-    });
 
     const HoverBarItems = isHovered ? (
         <>
@@ -64,9 +45,9 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
                         reate
                     </div>
                 </Link>
-                <div
-                    onClick={handleIsSearchModalOpen}
-                    className="md:flex md:items-center md:justify-between md:w-[7.5rem] md:box-content md:border-none cursor-pointer"
+                <Link
+                    href={'/search'}
+                    className="md:flex md:items-center md:justify-between md:w-[7.5rem] md:box-content md:border-none"
                 >
                     <img
                         src="/images/icons/search_icon.png"
@@ -76,7 +57,7 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
                         <span className="md:text-3xl md:font-semibold">S</span>
                         earch
                     </div>
-                </div>
+                </Link>
             </div>
             <div
                 id="profile-div"
@@ -84,8 +65,12 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
                   md:mb-8 md:relative bottom-10"
                 onClick={!user.isLoggedIn ? handleModalToggle : serveUserpage}
             >
-                <img src={user.image} alt="" className="h-12" />
-                <div>
+                <img
+                    src={user.image}
+                    alt=""
+                    className="h-12 w-12 rounded-lg shadow-sm bg-auto"
+                />
+                <div className="ml-auto">
                     {user.isLoggedIn ? (
                         <>
                             <p className="md:w-[4.5rem]">{user.nickname}</p>
@@ -104,7 +89,7 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
         "
                     onClick={() => {
                         if (window.confirm('로그아웃 하시겠습니까?'))
-                            logoutMutation.mutate();
+                            logoutMutaion.mutate();
                     }}
                 >
                     로그아웃
@@ -112,6 +97,7 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
             )}
         </>
     ) : (
+        // 호버 아닐 때
         <>
             <div
                 className="flex flex-col items-center 
@@ -136,7 +122,11 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
       "
                 onClick={!user.isLoggedIn ? handleModalToggle : serveUserpage}
             >
-                <img src={user.image} alt="" className="h-12" />
+                <img
+                    src={user.image}
+                    alt=""
+                    className="h-12 w-12 rounded-lg shadow-sm bg-auto"
+                />
             </div>
         </>
     );
