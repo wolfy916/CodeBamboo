@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 import { isHomeState } from '@/recoil/isHome';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from '@/recoil/user';
-import SearchModal from '@/components/common/SearchModal';
-import { UserItem } from '../components/user/UserItem';
+import SearchModal from '@/components/search/SearchModal';
 
 export const scrollTo700vh = () => {
   window.scrollTo({
