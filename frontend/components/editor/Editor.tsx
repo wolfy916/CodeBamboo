@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { codeState } from '@/recoil/topic';
 import { UnControlled as CodeItem } from 'react-codemirror2';
-import { isBrowser } from "browser-or-node";
+import { isBrowser } from 'browser-or-node';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import { Rendering } from './Rendering';
@@ -10,9 +10,9 @@ import { Article } from './Article';
 import useIsMobile from '@/hooks/useIsMobile';
 
 if (isBrowser) {
-  require("codemirror/mode/xml/xml");
-  require("codemirror/mode/css/css");
-  require("codemirror/mode/javascript/javascript");
+  require('codemirror/mode/xml/xml');
+  require('codemirror/mode/css/css');
+  require('codemirror/mode/javascript/javascript');
 }
 
 export const Editor = () => {
@@ -21,11 +21,11 @@ export const Editor = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('HTML');
   const [initialCode, setInitialCode] = useState('');
 
-  const mode:any = {
-    'HTML': 'xml',
-    'CSS': 'css',
-    'JavaScript': 'javascript'
-  }
+  const mode: any = {
+    HTML: 'xml',
+    CSS: 'css',
+    JavaScript: 'javascript',
+  };
 
   useEffect(() => {
     if (isMobile) return;
@@ -129,18 +129,19 @@ export const Editor = () => {
               autoScroll={true}
             />
           ) : (
-            <Article />
+            <div className="h-full">
+              <Article />
+              <Rendering />
+            </div>
           )}
         </div>
       </div>
-      <div
-        className="h-full
-      
-                      md:w-1/2"
-      >
-        {!isMobile && <Article />}
-        <Rendering />
-      </div>
+      {!isMobile && (
+        <div className={`h-full w-1/2`}>
+          <Article />
+          <Rendering />
+        </div>
+      )}
     </div>
   );
 };
