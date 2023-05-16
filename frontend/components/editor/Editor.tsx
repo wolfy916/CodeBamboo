@@ -11,6 +11,8 @@ import useIsMobile from '@/hooks/useIsMobile';
 
 if (isBrowser) {
   require("codemirror/mode/xml/xml");
+  require("codemirror/mode/css/css");
+  require("codemirror/mode/javascript/javascript");
 }
 
 export const Editor = () => {
@@ -26,9 +28,9 @@ export const Editor = () => {
   }
 
   useEffect(() => {
-    if (isMobile || !code || code.length === 0) return;
-    setSelectedLanguage(code[0]?.language);
-  }, [isMobile, code]);
+    if (isMobile) return;
+    setSelectedLanguage('HTML');
+  }, [isMobile]);
 
   useEffect(() => {
     if (!code || code.length === 0) return;

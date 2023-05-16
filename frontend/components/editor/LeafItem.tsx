@@ -6,6 +6,7 @@ import {
   codeState,
   articleState,
   selectedLeafState,
+  LeafState,
 } from '@/recoil/topic';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import authApi from '@/hooks/api/axios.authorization.instance';
@@ -44,6 +45,7 @@ export const LeafItem = ({ leaf }: LeafItemProps) => {
   const [selectedLeaf, setSelectedLeaf] = useRecoilState(selectedLeafState);
   const setCode = useSetRecoilState(codeState);
   const setArticle = useSetRecoilState(articleState);
+  const setLeafs = useSetRecoilState(LeafState);
   const [isLiked, setIsLiked] = useState(leaf.isLiked);
   const [isBookmarked, setIsBookmarked] = useState(leaf.isBookmarked);
   const isMobile = useIsMobile();
@@ -61,11 +63,25 @@ export const LeafItem = ({ leaf }: LeafItemProps) => {
   };
 
   const mutateLike = useMutation(() => queryLikeFn(leaf.leaf_id), {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data)
       console.log('좋아요 성공');
+      setLeafs((leafs)=>leafs.map((l) => {
+        if (l.leaf_id === leaf.leaf_id) {
+          return { ...l, isLiked:!isLiked };
+        }
+        return leaf
+    }))
     },
     onMutate: () => {
-      setIsLiked(!isLiked);
+      const updatedStatus = !isLiked
+      setIsLiked(updatedStatus);
+      // setLeafs((leafs)=>leafs.map((leaf) => {
+      //     if (leaf.leaf_id === selectedLeaf.leaf_id) {
+      //       return { ...leaf, isLiked:updatedStatus };
+      //     }
+      //     return leaf
+      // }))
     },
   });
 
