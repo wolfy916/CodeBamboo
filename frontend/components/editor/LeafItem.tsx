@@ -83,7 +83,6 @@ export const LeafItem = ({ leaf }: LeafItemProps) => {
   };
 
   const LeafTitle = () => {
-    console.log(leaf.title.length)
     return (
       <span className="text-[0.8rem]">
         {leaf.title.length < (isMobile ? 11 : 21) ? leaf.title : leaf.title.slice(0, (isMobile ? 10 : 20)) + '...'}

@@ -26,16 +26,17 @@ export const Editor = () => {
   }
 
   useEffect(() => {
-    if (isMobile) return;
+    if (isMobile || !code || code.length === 0) return;
     setSelectedLanguage(code[0]?.language);
-  }, [isMobile]);
+  }, [isMobile, code]);
 
   useEffect(() => {
+    if (!code || code.length === 0) return;
     const selectedCode = code.find(
       (e) => e.language === selectedLanguage
     )?.content;
     setInitialCode(selectedCode || '');
-  }, [selectedLanguage]);
+  }, [selectedLanguage, code]);
 
   const handleChange = (editor: any, data: any, value: string) => {
     const selectedCodeIndex = code.findIndex(
@@ -51,7 +52,8 @@ export const Editor = () => {
 
   const Tabs = () => {
     const languageOrder = ['HTML', 'CSS', 'JavaScript'];
-    const tabs = code
+    const filteredCode = code || [];
+    const tabs = filteredCode
       .filter((e) => languageOrder.includes(e.language))
       .sort((a, b) => {
         return (
