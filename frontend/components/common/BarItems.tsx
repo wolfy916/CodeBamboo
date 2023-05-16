@@ -39,7 +39,8 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
                 >
                     <img
                         src="/images/icons/more.png"
-                        className="md:mt-8 md:h-9"
+                        className="hidden 
+                                    md:block md:mt-8 md:h-9"
                     />
                     <div className="md:mt-8 md:h-9 md:text-xl md:tracking-wider">
                         <span className="md:text-3xl md:font-semibold">C</span>
@@ -52,7 +53,8 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
                 >
                     <img
                         src="/images/icons/search_icon.png"
-                        className="md:mt-8 md:h-9"
+                        className="hidden 
+                                    md:block md:mt-8 md:h-9"
                     />
                     <div className="md:mt-8 md:h-9 md:text-xl md:tracking-wider">
                         <span className="md:text-3xl md:font-semibold">S</span>
