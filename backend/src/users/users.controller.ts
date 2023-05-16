@@ -17,6 +17,8 @@ import { CreateFollowDto } from './dto/create.follow.dto';
 import { GetUserDto } from './dto/get.user.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { Request } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadedFile, UseInterceptors } from '@nestjs/common/decorators';
 
 // @UseGuards(JwtAuthGuard)
 @Controller('user')
@@ -106,5 +108,17 @@ export class UsersController {
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     // console.log('body :', updateUserDto);
     return this.usersService.update(id, updateUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('image'))
+  @Post('profile-image')
+  async profileImg(@Req() req:Request, @UploadedFile() file){
+    console.log(file)
+    const user = req.user
+    console.log(user["user_id"])
+
+    const url = await this.usersService.uploadImage('user-id', file);
+    console.log(url)
   }
 }

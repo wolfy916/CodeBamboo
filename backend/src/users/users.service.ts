@@ -13,9 +13,13 @@ import { LikeEntity } from './entities/like.entity';
 import { transformUserTopics, searchBestLeafId } from './utils/utils';
 import { getUserTopicsDTO } from './dto/get.userTopics.dto';
 import { Topic } from 'src/topics/entities/topic.entity';
+import { Storage } from '@google-cloud/storage';
 
 @Injectable()
 export class UsersService {
+  private storage: Storage;
+  private gcpImgBucket: string;
+
   constructor(
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<User>,
@@ -34,7 +38,13 @@ export class UsersService {
 
     @Inject('TOPIC_REPOSITORY')
     private topicRepository: Repository<Topic>,
-  ) {}
+  ) {
+    this.storage = new Storage({
+      projectId: "strategic-cacao-386913",
+      keyFilename: './utils/strategic-cacao-386913-af7bcc9d39b2.json'
+  });
+  this.gcpImgBucket = 'codebamboo-img-bucket';
+  }
 
   // [#] 테스트용 코드
   async getAll(): Promise<SimpleUserDto[]> {
@@ -351,4 +361,28 @@ export class UsersService {
       });
     }
   }
+
+  async uploadImage(userId: string, file: Express.Multer.File): Promise<string> {
+    const fileName = `profile-images/${userId}.jpg`;
+    const bucket = this.storage.bucket(this.gcpImgBucket);
+    const blob = bucket.file(fileName);
+
+    const blobStream = blob.createWriteStream({
+        metadata: {
+            contentType: file.mimetype
+        },
+    });
+
+    blobStream.end(file.buffer);
+
+    return new Promise((resolve, reject) =>
+        blobStream.on('finish', () => {
+            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+            resolve(publicUrl);
+        })
+        .on('error', (err) => {
+            reject(`Unable to upload image, something went wrong: ${err}`);
+        })
+    );
+}
 }
