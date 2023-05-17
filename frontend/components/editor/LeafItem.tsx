@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
-import router from 'next/router';
 import {
   LeafObject,
   codeState,
@@ -65,15 +64,15 @@ export const LeafItem = ({ leaf }: LeafItemProps) => {
   const mutateLike = useMutation(() => queryLikeFn(leaf.leaf_id), {
     onSuccess: (data) => {
       console.log(data)
-      setLeafs((leafs)=>leafs.map((l) => {
-        if (l.leaf_id === leaf.leaf_id) {
-          return { ...l, isLiked:!l.isLiked };
-        }
-        return l
-      }))
     },
     onMutate: () => {
       setIsLiked((prev)=>!prev);
+      setLeafs((leafs)=>leafs.map((l) => {
+        if (l.leaf_id === leaf.leaf_id) {
+          return { ...l, isLiked:!l.isLiked, likeCnt:l.likeCnt+(!l.isLiked? 1 : -1) };
+        }
+        return l
+      }))
     },
   });
 
@@ -99,7 +98,9 @@ export const LeafItem = ({ leaf }: LeafItemProps) => {
   const LeafTitle = () => {
     return (
       <span className="text-[0.8rem]">
-        {leaf.title.length < (isMobile ? 11 : 21) ? leaf.title : leaf.title.slice(0, (isMobile ? 10 : 20)) + '...'}
+        {leaf.title.length < (isMobile ? 11 : 21)
+          ? leaf.title
+          : leaf.title.slice(0, isMobile ? 10 : 20) + '...'}
       </span>
     );
   };
@@ -107,12 +108,13 @@ export const LeafItem = ({ leaf }: LeafItemProps) => {
   const LikeIcon = () => {
     return (
       <div
-        className="z-10"
+        className="flex flex-row gap-2 w-10 z-10"
         onClick={(e) => {
           e.stopPropagation();
           mutateLike.mutate();
         }}
       >
+        {leaf.likeCnt}
         {isLiked ? (
           <RiThumbUpFill className="text-[1.5rem]" />
         ) : (
@@ -143,12 +145,16 @@ export const LeafItem = ({ leaf }: LeafItemProps) => {
   return (
     <div
       className={`bg-slate-300 shrink-0 h-12 m-2 p-2 rounded-md flex items-center justify-between cursor-pointer drop-shadow-lg shadow-md 
-                ${selectedLeaf.leaf_id === leaf.leaf_id ? 'border-bamboo border-2 bg-slate-50' : ''}`}
+                ${
+                  selectedLeaf.leaf_id === leaf.leaf_id
+                    ? 'border-bamboo border-2 bg-slate-50'
+                    : ''
+                }`}
       onClick={selectLeaf}
     >
       <CodeIcon />
       <LeafTitle />
-      <div className='flex flex-row gap-1'>
+      <div className="flex flex-row gap-1">
         <LikeIcon />
         <BookmarkIcon />
       </div>

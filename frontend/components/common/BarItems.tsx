@@ -35,28 +35,30 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
             >
                 <Link
                     href={'/topics'}
-                    className="text-xl h-20 flex items-center justify-center md:justify-between md:w-[7.5rem]"
+                    className="text-xl h-fit flex items-center justify-center mt-11
+                    md:mt-0 md:justify-between md:w-[7.5rem]"
                 >
                     <img
                         src="/images/icons/more.png"
                         className="hidden 
                                     md:block md:mt-8 md:h-9"
                     />
-                    <div className="md:mt-8 md:h-9 md:text-xl md:tracking-wider md:hover:text-bamboo">
+                    <div className="md:animate-fadein md:mt-8 md:h-9 md:text-xl md:tracking-wider">
                         <span className="md:text-2xl md:font-semibold">C</span>
                         reate
                     </div>
                 </Link>
                 <Link
                     href={'/search'}
-                    className="text-xl h-20 flex items-center justify-center md:justify-between md:w-[7.5rem] md:box-content md:border-none"
+                    className="text-xl h-fit flex items-center justify-center mt-11
+                    md:mt-0 md:justify-between md:w-[7.5rem] md:box-content md:border-none"
                 >
                     <img
                         src="/images/icons/search_icon.png"
                         className="hidden 
                                     md:block md:mt-8 md:h-9"
                     />
-                    <div className="md:mt-8 md:h-9 md:text-xl md:tracking-wider md:hover:text-bamboo">
+                    <div className="md:animate-fadein md:mt-8 md:h-9 md:text-xl md:tracking-wider">
                         <span className="md:text-2xl md:font-semibold">S</span>
                         earch
                     </div>
@@ -64,8 +66,8 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
             </div>
             <div
                 id="profile-div"
-                className="h-20 flex items-center justify-around cursor-pointer
-                  md:h-fit md:mb-8 md:relative md:bottom-10"
+                className="h-20 flex items-center justify-around cursor-pointer mt-6
+                md:mt-0 md:h-fit md:mb-8 md:relative md:bottom-10"
                 onClick={!user.isLoggedIn ? handleModalToggle : serveUserpage}
             >
                 <img
@@ -73,7 +75,7 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
                     alt=""
                     className="h-12 w-12 rounded-lg shadow-sm object-cover"
                 />
-                <div className="md:ml-auto">
+                <div className="md:ml-auto md:animate-fadein">
                     {user.isLoggedIn ? (
                         <>
                             <p className="text-lg md:text-base md:w-[4.5rem]">
@@ -90,7 +92,7 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
             {user.isLoggedIn && (
                 <button
                     className="login-button mt-auto mb-2 h-14 px-0 tracking-wider text-lg
-                                md:h-8 md:w-[75%] md:text-[10px] md:absolute md:bottom-5 md:right-3 
+                        md:animate-fadein md:h-8 md:w-[75%] md:text-[10px] md:absolute md:bottom-5 md:right-3 
         "
                     onClick={() => {
                         if (window.confirm('로그아웃 하시겠습니까?'))

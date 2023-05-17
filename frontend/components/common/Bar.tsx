@@ -9,7 +9,6 @@ import { isHomeState } from '@/recoil/isHome';
 export const Bar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    const [isIconHovered, setIconHovered] = useState(false);
     const isHome = useRecoilValue(isHomeState);
     const isMobile = useIsMobile();
     const isClient = useIsClient();
@@ -40,26 +39,17 @@ export const Bar = () => {
             {isMobile ? (
                 <img src="/images/icons/bar_icon.png" alt="Bar Icon" />
             ) : (
-                <div
-                    className="flex items-center mt-4 justify-between"
-                    // onMouseEnter={setIconHovered(true)}
-                >
-                    {isIconHovered ? (
-                        <img
-                            src="/images/icons/logo_icon_green.png"
-                            className=""
-                            alt="Logo Icon"
-                        />
-                    ) : (
-                        <img
-                            src="/images/icons/logo_icon.png"
-                            className=""
-                            alt="Logo Icon"
-                        />
-                    )}
-
+                <div className="flex items-center mt-4 justify-between">
+                    <img
+                        src="/images/icons/logo_icon.png"
+                        className=""
+                        alt="Logo Icon"
+                    />
                     {isHovered && (
-                        <div className="flex flex-col font-bold tracking-wide ml-3 md:hover:text-bamboo">
+                        <div
+                            className="flex flex-col font-bold tracking-wide ml-3
+                      md:animate-fadein"
+                        >
                             {/* <p>Code</p> */}
                             <p>
                                 <span className="md:text-2xl md:font-semibold">
@@ -79,7 +69,7 @@ export const Bar = () => {
             className={`flex text-center items-center z-40
                   flex-row justify-between h-20 text-white bg-black
                   ${isHome ? 'absolute top-[700vh]' : 'relative'} w-screen
-                  md:flex-col md:justify-normal md:w-24 md:h-screen md:text-black md:bg-gray-100
+                  md:flex-col md:justify-normal md:w-24 md:h-screen md:text-black md:bg-[#eff1f3]
                   md:hover:w-[11rem] md:transition-w md:duration-500 md:ease-in-out
                   md:items-start md:ps-4
                   ${isHome ? 'md:relative md:top-[700vh]' : 'md:bottom-0'}`}

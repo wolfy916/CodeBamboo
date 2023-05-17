@@ -34,6 +34,10 @@ module.exports = {
                         transform: 'translate(-50%, 30%)',
                     },
                 },
+                fadein: {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' },
+                },
                 rotation: {
                     '0%': { transform: 'rotate(0deg)' },
                     '25%': { transform: 'rotate(-4deg)' },
@@ -45,6 +49,7 @@ module.exports = {
             animation: {
                 scrollArrow:
                     'scrollArrow 1.2s linear alternate-reverse infinite',
+                fadein: 'fadein 0.8s ease-in-out',
                 rotation: 'rotation 1s ease-in-out infinite',
             },
         },
