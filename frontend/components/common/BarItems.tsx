@@ -42,7 +42,7 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
                         className="hidden 
                                     md:block md:mt-8 md:h-9"
                     />
-                    <div className="md:mt-8 md:h-9 md:text-xl md:tracking-wider">
+                    <div className="md:mt-8 md:h-9 md:text-xl md:tracking-wider md:hover:text-bamboo">
                         <span className="md:text-2xl md:font-semibold">C</span>
                         reate
                     </div>
@@ -56,7 +56,7 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
                         className="hidden 
                                     md:block md:mt-8 md:h-9"
                     />
-                    <div className="md:mt-8 md:h-9 md:text-xl md:tracking-wider">
+                    <div className="md:mt-8 md:h-9 md:text-xl md:tracking-wider md:hover:text-bamboo">
                         <span className="md:text-2xl md:font-semibold">S</span>
                         earch
                     </div>
@@ -76,7 +76,9 @@ export const BarItems = ({ isHovered, setIsMenuOpen }: Props) => {
                 <div className="md:ml-auto">
                     {user.isLoggedIn ? (
                         <>
-                            <p className="text-lg md:text-base md:w-[4.5rem]">{user.nickname}</p>
+                            <p className="text-lg md:text-base md:w-[4.5rem]">
+                                {user.nickname}
+                            </p>
                         </>
                     ) : (
                         <button className="login-button md:w-[4.5rem]">

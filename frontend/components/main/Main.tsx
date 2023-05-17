@@ -7,36 +7,37 @@ import { useRecoilState } from 'recoil';
 import { mainTopicListState } from '@/recoil/topic';
 
 export default function Main() {
-  const isClient = useIsClient();
-  const isMobile = useIsMobile();
-  const [mainTopicList, setMainTopicList] = useRecoilState(mainTopicListState);
+    const isClient = useIsClient();
+    const isMobile = useIsMobile();
+    const [mainTopicList, setMainTopicList] =
+        useRecoilState(mainTopicListState);
 
-  useEffect(() => {
-    if (isClient) {
-      getMainList(setMainTopicList);
-    }
-  }, [isClient]);
+    useEffect(() => {
+        if (isClient) {
+            getMainList(setMainTopicList);
+        }
+    }, [isClient]);
 
-  return (
-    <div className="relative w-full top-[700vh] h-[100vh] overflow-y-scroll z-30 scrollbar-hide">
-      {/* 스크롤바에 밀리지않게 더미 박스 매우 중요*/}
-      {isClient && isMobile && <div className="w-full h-20"></div>}
-      <p
-        className="font-scp m-5
+    return (
+        <div className="relative w-full top-[700vh] h-[100vh] overflow-y-scroll z-30 scrollbar-hide">
+            {/* 스크롤바에 밀리지않게 더미 박스 매우 중요*/}
+            {isClient && isMobile && <div className="w-full h-20"></div>}
+            <p
+                className="font-scp m-5
                   text-3xl
-                  md:mx-20 md:mt-7 md:text-5xl"
-      >
-        Popular
-      </p>
-      <TopicList topicList={mainTopicList.popular} />
-      <p
-        className="font-scp m-5
+                  md:mx-20 md:mt-7 md:text-5xl md:mb-0"
+            >
+                Popular
+            </p>
+            <TopicList topicList={mainTopicList.popular} />
+            <p
+                className="font-scp m-5
                   text-3xl
-                  md:mx-20 md:mt-7 md:text-5xl"
-      >
-        Trending
-      </p>
-      <TopicList topicList={mainTopicList.trending} />
-    </div>
-  );
+                  md:mx-20 md:mt-14 md:text-5xl md:mb-0"
+            >
+                Trending
+            </p>
+            <TopicList topicList={mainTopicList.trending} />
+        </div>
+    );
 }
