@@ -94,7 +94,7 @@ export class UsersController {
   // [10] 유저 정보 수정
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
-    FileInterceptor('image', {
+    FileInterceptor('profileImg', {
       storage: memoryStorage(),
       limits: { fileSize: 2097152 }, // 2MB --- 2*2^20
       fileFilter: (req, file, callback) => {
@@ -106,7 +106,7 @@ export class UsersController {
   )
   @Patch()
   update(@Req() req: Request, @Body() userInput: any, @UploadedFile() profileImg) {
-    // console.log('body :', updateUserDto);
+    // console.log('img : ', profileImg)
     return this.usersService.update(req.user['user_id'], userInput, profileImg);
   }
 }

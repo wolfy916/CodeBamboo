@@ -22,13 +22,13 @@ export class CloudStorageService {
     return escDestination;
   }
 
-  private setFilename(uploadedFile): string {
-    const fileName = parse(uploadedFile.originalname);
-    return `${fileName.name}-${Date.now()}${fileName.ext}`.replace(/^\.+/g, '').replace(/^\/+/g, '').replace(/\r|\n/g, '_');
+  private setFilename(nickname): string {
+    // const fileName = parse(uploadedFile.originalname);
+    return `profileImg-${nickname}-${Date.now()}`.replace(/^\.+/g, '').replace(/^\/+/g, '').replace(/\r|\n/g, '_');
   }
 
-  async uploadFile(uploadedFile, destination: string): Promise<any> {
-    const fileName = this.setDestination(destination) + this.setFilename(uploadedFile);
+  async uploadFile(nickname, uploadedFile, destination: string): Promise<any> {
+    const fileName = this.setDestination(destination) + this.setFilename(nickname);
     const file = this.bucket.file(fileName);
     // console.log('스토리지의 파일 : ', file)
     try {

@@ -332,12 +332,12 @@ export class UsersService {
     if (profileImg) {
       // 기존 파일 삭제
       const fileName = user.image.split('/').pop(); // extract file name from URL
-      console.log('원래 프로필 이미지 : ', fileName)
+      // console.log('원래 프로필 이미지 : ', fileName)
       await this.cloudStorageService.removeFile(fileName);
       // 유저가 업로드한 이미지 저장
-      const file = await this.cloudStorageService.uploadFile(profileImg, '');
+      const file = await this.cloudStorageService.uploadFile(user.nickname, profileImg, '');
       userInput.image = file.publicUrl;
-      console.log('새 프로필 이미지 : ', userInput.image)
+      // console.log('새 프로필 이미지 : ', userInput.image)
     }
 
     await this.userRepository.update(id, {
@@ -351,8 +351,10 @@ export class UsersService {
     });
 
     return {
-      message:'회원정보 수정 성공'
-    }
+      message:'회원정보 수정 성공',
+      data:{
+        newProfileImg:userInput.image
+      }
     }
   }
 }
