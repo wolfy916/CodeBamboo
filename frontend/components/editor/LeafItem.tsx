@@ -65,32 +65,30 @@ export const LeafItem = ({ leaf }: LeafItemProps) => {
   const mutateLike = useMutation(() => queryLikeFn(leaf.leaf_id), {
     onSuccess: (data) => {
       console.log(data)
-      console.log('좋아요 성공');
       setLeafs((leafs)=>leafs.map((l) => {
         if (l.leaf_id === leaf.leaf_id) {
-          return { ...l, isLiked:!isLiked };
+          return { ...l, isLiked:!l.isLiked };
         }
-        return leaf
-    }))
+        return l
+      }))
     },
     onMutate: () => {
-      const updatedStatus = !isLiked
-      setIsLiked(updatedStatus);
-      // setLeafs((leafs)=>leafs.map((leaf) => {
-      //     if (leaf.leaf_id === selectedLeaf.leaf_id) {
-      //       return { ...leaf, isLiked:updatedStatus };
-      //     }
-      //     return leaf
-      // }))
+      setIsLiked((prev)=>!prev);
     },
   });
 
   const mutateBookmark = useMutation(() => queryBookmarkFn(leaf.leaf_id), {
-    onSuccess: () => {
-      console.log('즐겨찾기 성공');
+    onSuccess: (data) => {
+      console.log(data)
+      setLeafs((leafs)=>leafs.map((l) => {
+        if (l.leaf_id === leaf.leaf_id) {
+          return { ...l, isBookmarked:!l.isBookmarked };
+        }
+        return l
+      }))
     },
     onMutate: () => {
-      setIsBookmarked(!isBookmarked);
+      setIsBookmarked((prev)=>!prev);
     },
   });
 
