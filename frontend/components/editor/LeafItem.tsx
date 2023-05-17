@@ -65,15 +65,15 @@ export const LeafItem = ({ leaf }: LeafItemProps) => {
   const mutateLike = useMutation(() => queryLikeFn(leaf.leaf_id), {
     onSuccess: (data) => {
       console.log(data)
-      setLeafs((leafs)=>leafs.map((l) => {
-        if (l.leaf_id === leaf.leaf_id) {
-          return { ...l, isLiked:!l.isLiked };
-        }
-        return l
-      }))
     },
     onMutate: () => {
       setIsLiked((prev)=>!prev);
+      setLeafs((leafs)=>leafs.map((l) => {
+        if (l.leaf_id === leaf.leaf_id) {
+          return { ...l, isLiked:!l.isLiked, likeCnt:l.likeCnt+(!l.isLiked? 1 : -1) };
+        }
+        return l
+      }))
     },
   });
 
@@ -107,12 +107,13 @@ export const LeafItem = ({ leaf }: LeafItemProps) => {
   const LikeIcon = () => {
     return (
       <div
-        className="z-10"
+        className="flex flex-row gap-2 w-10 z-10"
         onClick={(e) => {
           e.stopPropagation();
           mutateLike.mutate();
         }}
       >
+        {leaf.likeCnt}
         {isLiked ? (
           <RiThumbUpFill className="text-[1.5rem]" />
         ) : (
