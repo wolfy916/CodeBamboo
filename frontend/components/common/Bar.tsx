@@ -9,6 +9,7 @@ import { isHomeState } from '@/recoil/isHome';
 export const Bar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isIconHovered, setIsIconHovered] = useState(false);
   const isHome = useRecoilValue(isHomeState);
   const isMobile = useIsMobile();
   const isClient = useIsClient();
@@ -39,14 +40,27 @@ export const Bar = () => {
       {isMobile ? (
         <img src="/images/icons/bar_icon.png" alt="Bar Icon" />
       ) : (
-        <div className="flex items-center mt-4 justify-between">
-          <img src="/images/icons/logo_icon.png" className="" alt="Logo Icon" />
+        <div
+          className="flex items-center mt-4 justify-between"
+          onMouseEnter={() => setIsIconHovered(true)}
+          onMouseLeave={() => setIsIconHovered(false)}
+        >
+          <img
+            src={
+              isIconHovered
+                ? '/images/icons/logo_icon_green.png'
+                : '/images/icons/logo_icon.png'
+            }
+            className=""
+            alt="Logo Icon"
+          />
           {isHovered && (
             <div
-              className="flex flex-col font-bold tracking-wide ml-3
-                      md:animate-fadein"
+              className={`${
+                isIconHovered ? 'md:text-bamboo' : ''
+              } flex flex-col font-bold tracking-wide ml-3
+                        md:animate-fadein`}
             >
-              {/* <p>Code</p> */}
               <p>
                 <span className="md:text-2xl md:font-semibold">H</span>
                 ome
