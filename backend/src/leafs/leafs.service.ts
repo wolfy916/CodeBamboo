@@ -219,15 +219,15 @@ export class LeafsService {
       throw new NotFoundException(`leaf id ${id} not found`);
     }
     // console.log(leafDto);
-    if (!leaf.is_root) {
-      // if (leaf.codes) {
-      //   await this.codeRepository
-      //     .createQueryBuilder('users')
-      //     .delete()
-      //     .from(Code)
-      //     .where('leaf_id = :leaf_id', { leaf_id: id })
-      //     .execute();
-      // }
+    if (!leaf.is_root && !leaf.is_deleted) {
+      if (leaf.codes) {
+        await this.codeRepository
+          .createQueryBuilder('users')
+          .delete()
+          .from(Code)
+          .where('leaf_id = :leaf_id', { leaf_id: id })
+          .execute();
+      }
       const element = {
         language: 'HTML',
         content: '<div>삭제된 리프입니다.</div>',
@@ -245,13 +245,14 @@ export class LeafsService {
           title: '삭제된 리프입니다.',
           content: '삭제된 리프입니다.',
           type: 0,
+          is_deleted: true,
         })
         .where('leaf_id = :id', { id })
         .execute();
     } else {
-      return 'rootLeaf는 삭제 될 수 없습니다.';
+      return '해당 leaf는 삭제 될 수 없습니다.';
     }
-    return leaf;
+    return 'leaf가 삭제되었습니다.';
 
     // const updateLeaf = await this.leafRepository
     //   .createQueryBuilder()
