@@ -9,6 +9,7 @@ import {
   Post,
   UseGuards,
   Req,
+  BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { SimpleUserDto } from './dto/simple.user.dto';
@@ -19,6 +20,7 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadedFile, UseInterceptors } from '@nestjs/common/decorators';
+import { memoryStorage } from 'multer';
 
 // @UseGuards(JwtAuthGuard)
 @Controller('user')
@@ -104,21 +106,34 @@ export class UsersController {
     return this.usersService.deleteOne(id);
   }
   // [11] 유저 정보 수정
+  // @ApiConsumes('multipart/form-data')
+  // @ApiBearerAuth()
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: memoryStorage(),
+      limits: { fileSize: 2097152 }, // 2MB --- 2*2^20
+      fileFilter: (req, file, callback) => {
+        return file.mimetype.match(/image\/(jpg|jpeg|png|gif)$/)
+          ? callback(null, true)
+          : callback(new BadRequestException('Only image files are allowed'), false);
+      }
+    })
+  )
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto, @UploadedFile() profileImg) {
     // console.log('body :', updateUserDto);
-    return this.usersService.update(id, updateUserDto);
+    return this.usersService.update(id, updateUserDto, profileImg);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('image'))
-  @Post('profile-image')
-  async profileImg(@Req() req:Request, @UploadedFile() file){
-    console.log(file)
-    const user = req.user
-    console.log(user["user_id"])
+  // @UseGuards(JwtAuthGuard)
+  // @UseInterceptors(FileInterceptor('image'))
+  // @Post('profile-image')
+  // async profileImg(@Req() req:Request, @UploadedFile() file){
+  //   console.log(file)
+  //   const user = req.user
+  //   console.log(user["user_id"])
 
-    const url = await this.usersService.uploadImage('user-id', file);
-    console.log(url)
-  }
+  //   const url = await this.usersService.uploadImage('user-id', file);
+  //   console.log(url)
+  // }
 }

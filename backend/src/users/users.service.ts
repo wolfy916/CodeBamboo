@@ -13,13 +13,10 @@ import { LikeEntity } from './entities/like.entity';
 import { transformUserTopics, searchBestLeafId } from './utils/utils';
 import { getUserTopicsDTO } from './dto/get.userTopics.dto';
 import { Topic } from 'src/topics/entities/topic.entity';
-import { Storage } from '@google-cloud/storage';
+import { CloudStorageService } from 'src/core/services/cloud-stroage-service';
 
 @Injectable()
 export class UsersService {
-  private storage: Storage;
-  private gcpImgBucket: string;
-
   constructor(
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<User>,
@@ -38,13 +35,9 @@ export class UsersService {
 
     @Inject('TOPIC_REPOSITORY')
     private topicRepository: Repository<Topic>,
-  ) {
-    this.storage = new Storage({
-      projectId: "strategic-cacao-386913",
-      keyFilename: './utils/strategic-cacao-386913-af7bcc9d39b2.json'
-  });
-  this.gcpImgBucket = 'codebamboo-img-bucket';
-  }
+
+    private cloudStorageService: CloudStorageService
+  ) {}
 
   // [#] 테스트용 코드
   async getAll(): Promise<SimpleUserDto[]> {
@@ -347,8 +340,19 @@ export class UsersService {
 
   // [11] 유저 정보 수정
   // 닉네임, 이미지경로, 자기소개만 수정 가능
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
+  async update(id: number, updateUserDto: UpdateUserDto, profileImg) {
     const simpleUserDto = await this.getUser(id);
+
+    if (simpleUserDto && profileImg) {
+      // 기존 파일 삭제
+      const fileName = simpleUserDto.image.split('/').pop(); // extract file name from URL
+      console.log('원래 프로필 이미지 : ', fileName)
+      await this.cloudStorageService.removeFile(fileName);
+      // 유저가 업로드한 이미지 저장
+      const file = await this.cloudStorageService.uploadFile(profileImg, '');
+      updateUserDto.image = file.publicUrl;
+    }
+
     if (simpleUserDto) {
       await this.userRepository.update(id, {
         nickname: updateUserDto.nickname
@@ -359,30 +363,33 @@ export class UsersService {
           ? updateUserDto.introduce
           : simpleUserDto.introduce,
       });
+
+      return {
+        message:'회원정보 수정 성공'
+      }
     }
   }
+  //   async uploadImage(userId: string, file: Express.Multer.File): Promise<string> {
+//     const fileName = `profile-images/${userId}.jpg`;
+//     const bucket = this.storage.bucket(this.gcpImgBucket);
+//     const blob = bucket.file(fileName);
 
-  async uploadImage(userId: string, file: Express.Multer.File): Promise<string> {
-    const fileName = `profile-images/${userId}.jpg`;
-    const bucket = this.storage.bucket(this.gcpImgBucket);
-    const blob = bucket.file(fileName);
+//     const blobStream = blob.createWriteStream({
+//         metadata: {
+//             contentType: file.mimetype
+//         },
+//     });
 
-    const blobStream = blob.createWriteStream({
-        metadata: {
-            contentType: file.mimetype
-        },
-    });
+//     blobStream.end(file.buffer);
 
-    blobStream.end(file.buffer);
-
-    return new Promise((resolve, reject) =>
-        blobStream.on('finish', () => {
-            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-            resolve(publicUrl);
-        })
-        .on('error', (err) => {
-            reject(`Unable to upload image, something went wrong: ${err}`);
-        })
-    );
-}
+//     return new Promise((resolve, reject) =>
+//         blobStream.on('finish', () => {
+//             const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+//             resolve(publicUrl);
+//         })
+//         .on('error', (err) => {
+//             reject(`Unable to upload image, something went wrong: ${err}`);
+//         })
+//     );
+// }
 }
