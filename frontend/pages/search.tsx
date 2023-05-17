@@ -38,15 +38,20 @@ export const Search = ({}: Props) => {
     h-full bg-white 
     md:w-full md:h-full md:justify-center md:grid md:grid-cols-2 xl:grid xl:grid-cols-3 md:overflow-y-scroll scrollbar-hide`;
 
-    const notFoundClass = () => {
+    const notFoundClass = (data: boolean) => {
+        let isTopic = '토픽';
+        if (!data) {
+            isTopic = '리프';
+        }
         return (
-            <div className="bg-white place-item-center h-full w-full ">
+            <div className="bg-white flex flex-col place-items-center justify-items-center h-full w-full">
                 <img
                     src="/images/404Icon.png"
-                    className="md:mt-20 md:mx-20 border border-black md:h-30"
+                    className="md:mt-20 mt-10 md:mx-20  h-30 md:h-30"
                 ></img>
-                <div className="border border-black justify-center content-center">
-                    토픽에서는 {inputValue.inputValue}(을)를 찾을 수 없습니다.
+                <div className="mt-3">
+                    {isTopic}에서는 {inputValue.inputValue}(을)를 찾을 수
+                    없습니다.
                 </div>
             </div>
         );
@@ -70,21 +75,18 @@ export const Search = ({}: Props) => {
             onSuccess: (data) => {
                 if (data) {
                     setSearchTopicItems(
-                        data
-                            .reverse()
-                            .slice(0, 6)
-                            .map((obj: any, idx: number) => {
-                                return (
-                                    <SearchItem
-                                        topic_id={obj.topic_id}
-                                        needHelp={obj.needHelp}
-                                        creation_time={obj.creation_time}
-                                        rootLeaf={obj.rootLeaf}
-                                        bestLeaf={obj.bestLeaf}
-                                        key={idx}
-                                    />
-                                );
-                            })
+                        data.reverse().map((obj: any, idx: number) => {
+                            return (
+                                <SearchItem
+                                    topic_id={obj.topic_id}
+                                    needHelp={obj.needHelp}
+                                    creation_time={obj.creation_time}
+                                    rootLeaf={obj.rootLeaf}
+                                    bestLeaf={obj.bestLeaf}
+                                    key={idx}
+                                />
+                            );
+                        })
                     ),
                         setIsTopicFound(true);
                     data.sort((prev: any, cur: any) => {
@@ -96,7 +98,7 @@ export const Search = ({}: Props) => {
                     });
                     // console.log(data);
                     setlikesTopicItems(
-                        data.slice(0, 6).map((obj: any, idx: number) => {
+                        data.map((obj: any, idx: number) => {
                             return (
                                 <SearchItem
                                     topic_id={obj.topic_id}
@@ -158,7 +160,7 @@ export const Search = ({}: Props) => {
                     });
                     // console.log(data);
                     setlikesLeafItems(
-                        data.slice(0, 6).map((obj: any, idx: number) => {
+                        data.map((obj: any, idx: number) => {
                             return (
                                 <SearchItem
                                     topic_id={obj.topic_id}
@@ -189,7 +191,7 @@ export const Search = ({}: Props) => {
             )
         ) : (
             //토픽 찾지 못했을 때
-            notFoundClass()
+            notFoundClass(true)
         );
     };
     const LeafList = () => {
@@ -200,7 +202,7 @@ export const Search = ({}: Props) => {
                 <div className={searchItemClass}>{likesLeafItems}</div>
             )
         ) : (
-            notFoundClass()
+            notFoundClass(false)
         );
     };
 
