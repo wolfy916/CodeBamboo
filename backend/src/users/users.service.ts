@@ -7,7 +7,7 @@ import { MessageUserDto } from './dto/message.user.dto';
 import { Bookmark } from './entities/bookmark.entity';
 import { Leaf } from 'src/leafs/entities/leaf.entity';
 import { LikeEntity } from './entities/like.entity';
-import { transformUserTopics, searchBestLeafId } from './utils/utils';
+import { searchBestLeafId } from './utils/utils';
 import { Topic } from 'src/topics/entities/topic.entity';
 
 @Injectable()
@@ -77,15 +77,15 @@ export class UsersService {
     const existedUserB = await this.isExistedUser(userId);
     if (existedUserA && existedUserB) {
       const follow = await this.followRepository.findOneBy({
-        following: {user_id: myUserId},
-        followed: {user_id: userId},
+        following: { user_id: myUserId },
+        followed: { user_id: userId },
       });
       const messageUserDto = new MessageUserDto();
       if (!follow) {
         // 없는 관계면 생성
         await this.followRepository.save({
-          following: {user_id: myUserId},
-          followed: {user_id: userId},
+          following: { user_id: myUserId },
+          followed: { user_id: userId },
         });
         messageUserDto.message = `${existedUserB.nickname}님을 팔로우했어요 !`;
         return messageUserDto;
@@ -101,29 +101,31 @@ export class UsersService {
 
   // [3-2] 내가 팔로우한 사람인지 아닌지 판별
   async isFollowUser(myUserId: number, userId: number): Promise<boolean> {
-    if (myUserId === userId) return null
+    if (myUserId === userId) return null;
     return !!(await this.followRepository.findOneBy({
       following: { user_id: myUserId },
-      followed: { user_id: userId},
+      followed: { user_id: userId },
     }));
   }
 
   // [4] 특정 유저가 작성한 모든 토픽 조회 ok
   async getUserTopics(userId: number) {
     await this.isExistedUser(userId);
-    const user = await this.userRepository.findOne({
+    const topics = await this.topicRepository.find({
       where: {
-        user_id: userId,
+        user: { user_id: userId },
       },
-      // 여기 업데이트 해서, 토픽의 리프, 리프의 코드 싹 가져옴
-      relations: ['topics', 'topics.leafs', 'topics.leafs.codes'],
+      relations: [
+        'bestLeaf',
+        'rootLeaf',
+        'bestLeaf.codes',
+        'rootLeaf.codes',
+        'bestLeaf.user',
+        'rootLeaf.user',
+      ],
+      loadEagerRelations: false,
     });
-
-    const data = transformUserTopics(user.topics);
-    return {
-      message: '유저 토픽 조회 성공',
-      data,
-    };
+    return topics;
   }
 
   // [5] 특정 유저가 작성한 모든 리프 조회 ok
@@ -280,14 +282,31 @@ export class UsersService {
   // [9] 유저 id로 정보 조회 ok
   async getUser(myUserId: number, userId: number) {
     const user = await this.isExistedUser(userId);
-    // isFollow 추가
-    const isFollow =
-      myUserId
-        ? await this.isFollowUser(myUserId, userId)
-        : null;
+    // isFollow
+    const isFollow = myUserId
+      ? await this.isFollowUser(myUserId, userId)
+      : null;
+
+    // cnt
+    const followersCnt = await this.followRepository.count({
+      where: { followed: { user_id: userId } },
+    });
+    const topicsCnt = await this.topicRepository.count({
+      where: { user: { user_id: userId } },
+    });
+    const leafsCnt = await this.leafRepository.count({
+      where: { user: { user_id: userId } },
+    });
+    const bookmarksCnt = await this.bookmarkRepository.count({
+      where: { user: { user_id: userId } },
+    });
     return {
       ...user,
-      isFollow: isFollow,
+      isFollow,
+      followersCnt,
+      topicsCnt,
+      leafsCnt,
+      bookmarksCnt,
     };
   }
 
@@ -307,13 +326,9 @@ export class UsersService {
     const user = await this.isExistedUser(userId);
     if (user) {
       await this.userRepository.update(userId, {
-        nickname: userInput.nickname
-          ? userInput.nickname
-          : user.nickname,
+        nickname: userInput.nickname ? userInput.nickname : user.nickname,
         image: userInput.image ? userInput.image : user.image,
-        introduce: userInput.introduce
-          ? userInput.introduce
-          : user.introduce,
+        introduce: userInput.introduce ? userInput.introduce : user.introduce,
       });
       return this.isExistedUser(userId);
     }

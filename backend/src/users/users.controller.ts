@@ -28,9 +28,7 @@ export class UsersController {
 
   // [1] 유저 nickname으로 정보 조회 ok
   @Get('search')
-  searchUsersNickname(
-    @Query('nickname') userInput: string,
-  ) {
+  searchUsersNickname(@Query('nickname') userInput: string) {
     return this.usersService.searchUsersNickname(userInput);
   }
 
@@ -44,7 +42,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Post('follow')
   followUser(@Req() req: Request, @Body() reqBody: any) {
-    return this.usersService.followUser(req.user['user_id'],reqBody.userId);
+    return this.usersService.followUser(req.user['user_id'], reqBody.userId);
   }
 
   // [4] 유저 토픽 조회 ok
@@ -85,10 +83,10 @@ export class UsersController {
   @Public()
   @Get(':id')
   getUser(@Req() req: Request, @Param('id') id: number) {
-    const myUserId = req.user ? req.user['user_id'] : 0
+    const myUserId = req.user ? req.user['user_id'] : 0;
     return this.usersService.getUser(myUserId, id);
   }
-  
+
   // [10] 유저 정보 수정 ok
   @UseGuards(JwtAuthGuard)
   @Patch()
