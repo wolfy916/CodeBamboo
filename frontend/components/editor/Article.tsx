@@ -59,6 +59,7 @@ export const Article = ({}: Props) => {
   const setIsOpen = useSetRecoilState(loginModalState);
   const [needHelp, setNeedHelp] = useState(false);
   const [gptLoading, setGptLoading] = useState(false)
+  const [gptFail, setGptFail] = useState(false)
 
   const {
     register,
@@ -175,24 +176,33 @@ export const Article = ({}: Props) => {
     },
     [setArticle]
   );
-
+  
+  // gpt 호출
   const userPrompt = article.content
-  const servePromptMutation = useMutation(()=>authApi.post('user/gpt/call', {userPrompt}), {
+  const prevCode = ''
+  const servePromptMutation = useMutation(()=>authApi.post('user/gpt/call', {userPrompt, prevCode:prevCode||null}), {
     onSuccess:(data)=>{
-      const rst = data.data.answer
-      const convertedData = JSON.parse(rst)
-      const gptCode = []
-
-      for (const key in convertedData) {
-        const value = convertedData[key]
-        const codeForm = {
-          code_id: null,
-          language: key,
-          content: value
+        const rst = data.data.answer
+        console.log('파싱 전 : ', rst)
+        const json = JSON.parse(rst)
+        console.log('파싱 후 : ', json)
+        
+        const gptCode = []
+  
+        for (const key in json) {
+          const value = json[key]
+          const codeForm = {
+            code_id: null,
+            language: key,
+            content: value
+          }
+          gptCode.push(codeForm)
         }
-        gptCode.push(codeForm)
-      }
-      setCode(gptCode)
+        console.log(gptCode)
+        setCode(gptCode)
+        console.log('code: ', code)
+        // setTimeout(()=>{setGptFail(true)},1500)
+        // setTimeout(()=>{setGptFail(false)},1500)
     },
   })
   const handleServePrompt = ()=>{
@@ -277,6 +287,7 @@ export const Article = ({}: Props) => {
         </div>
       </form>
       {gptLoading && <Dialog fail={false} context='컴포넌트를 작성하는 중입니다...'/>}
+      {gptFail && <Dialog fail={true} context='조금 뒤에 다시 시도해주세요.'/>}
     </div>
   );
 };
