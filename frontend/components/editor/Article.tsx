@@ -2,12 +2,12 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { articleState, codeState, selectedLeafState } from '@/recoil/topic';
+import { LeafState, articleState, codeState, selectedLeafState } from '@/recoil/topic';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import authApi from '@/hooks/api/axios.authorization.instance';
 import { GrFlagFill } from 'react-icons/gr';
 import { loginModalState, userState } from '@/recoil/user';
-import { CodeObject } from '@/recoil/topic';
+import { queryTopicDetailFn } from '@/pages/topics/[topicId]';
 
 interface Props {}
 
@@ -38,14 +38,23 @@ const queryLeafEditFn = async (leafId:number|null, body: any) => {
   }
 };
 
+const queryLeafDeleteFn = async (leafId:number|null) => {
+  try {
+    const response = await authApi.patch(`leaf/invalidLeaf/${leafId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export const Article = ({}: Props) => {
   const router = useRouter();
   const topicId = router.query.topicId;
   const [article, setArticle] = useRecoilState(articleState);
   const user = useRecoilValue(userState);
-  const code = useRecoilValue(codeState);
-  const setCode = useSetRecoilState(codeState)
-  const selectedLeaf = useRecoilValue(selectedLeafState);
+  const [code, setCode] = useRecoilState(codeState);
+  const setLeafs = useSetRecoilState(LeafState)
+  const [selectedLeaf, setSelectedLeaf] = useRecoilState(selectedLeafState);
   const setIsOpen = useSetRecoilState(loginModalState);
   const [needHelp, setNeedHelp] = useState(false);
   const {
@@ -55,8 +64,8 @@ export const Article = ({}: Props) => {
     handleSubmit,
   } = useForm({
     defaultValues: {
-      title: `${article.title}`,
-      content: `${article.content}`,
+      title: article.title || '',
+      content: article.content || '',
     },
   });
 
@@ -67,16 +76,51 @@ export const Article = ({}: Props) => {
   });
 
   const mutateLeaf = useMutation((body: any) => queryLeafFn(body), {
-    onSuccess: (topicId) => {
-      router.push(`/topics/${topicId}`);
+    onSuccess: async (data) => {
+      try {
+        const response = await queryTopicDetailFn(topicId);
+        setLeafs(response?.leafs);
+        setSelectedLeaf({
+          user_id: data?.user.user_id,
+          leaf_id: data?.leaf_id,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
   const mutateLeafEdit = useMutation((body: any) => queryLeafEditFn(selectedLeaf.leaf_id, body), {
-    onSuccess: (topicId) => {
-      router.push(`/topics/${topicId}`);
+    onSuccess: async (data) => {
+      try {
+        const response = await queryTopicDetailFn(topicId);
+        setLeafs(response?.leafs);
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
+
+  const mutateLeafDelete = useMutation(() => queryLeafDeleteFn(selectedLeaf.leaf_id), {
+    onSuccess: async (data) => {
+      try {
+        const response = await queryTopicDetailFn(topicId);
+        setLeafs(response?.leafs);
+        setSelectedLeaf({
+          user_id: response?.bestLeaf.user_id,
+          leaf_id: response?.bestLeaf.leaf_id,
+        });
+        setCode(response?.bestLeaf.codes);
+        setArticle({
+          title: response?.bestLeaf.title,
+          content: response?.bestLeaf.content,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  })
+
 
   const EditLeaf = () => {
     const body = {
@@ -84,6 +128,12 @@ export const Article = ({}: Props) => {
       codes:code,
     }
     mutateLeafEdit.mutate(body)
+  }
+
+  const DeleteLeaf = () => {
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      mutateLeafDelete.mutate()
+    }
   }
 
   const onSubmit = (data: any) => {
@@ -164,7 +214,7 @@ export const Article = ({}: Props) => {
           {...register('title', { required: true, maxLength: 100 })}
           type="text"
           name="title"
-          value={article.title}
+          value={article?.title || ''}
           onChange={handleInputChange}
           placeholder="제목"
         />
@@ -174,7 +224,7 @@ export const Article = ({}: Props) => {
           className="resize-none h-[93%] article-input"
           {...register('content')}
           name="content"
-          value={article.content || ''}
+          value={article?.content || ''}
           onChange={handleInputChange}
           placeholder="내용"
           />
@@ -199,6 +249,12 @@ export const Article = ({}: Props) => {
               {!needHelp ? `Help!` : <GrFlagFill />}
             </div>
           )}
+          { selectedLeaf.user_id === user.user_id &&
+            <div 
+              className="bamboo-button bg-rose-500 hover:bg-red-600"
+              onClick={()=>DeleteLeaf()}>
+              Delete
+            </div> }
           { selectedLeaf.user_id === user.user_id &&
             <div 
               className="bamboo-button"

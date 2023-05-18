@@ -135,7 +135,7 @@ export class LeafsService {
       const newCode = this.codeRepository.create(json);
       await this.codeRepository.save(newCode);
     }
-    return data.topic_id;
+    return createLeaf;
   }
 
   //   async deleteOne(id: number): Promise<void> {
@@ -170,9 +170,8 @@ export class LeafsService {
       let type = 0;
       if (leafDto.codes) {
         await this.codeRepository
-          .createQueryBuilder('users')
+          .createQueryBuilder('codes')
           .delete()
-          .from(Code)
           .where('leaf_id = :leaf_id', { leaf_id: id })
           .execute();
       }
