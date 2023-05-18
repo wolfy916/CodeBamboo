@@ -128,8 +128,6 @@ export const Article = ({}: Props) => {
   const servePromptMutation = useMutation(()=>authApi.post('user/gpt/call', {userPrompt}), {
     onSuccess:(data)=>{
       const rst = data.data.answer
-      console.log('rst: ', rst)
-
       const convertedData = JSON.parse(rst)
       const gptCode = []
 
@@ -142,17 +140,13 @@ export const Article = ({}: Props) => {
         }
         gptCode.push(codeForm)
       }
-
       setCode(gptCode)
-      console.log(gptCode)
-      console.log('code: ', code)
     }
-
   })
 
-  const handleServePrompt = (e:any)=>{
+  const handleServePrompt = ()=>{
     servePromptMutation.mutate()
-    e.preventDefault()
+    // e.preventDefault()
   }
 
   return (
@@ -175,18 +169,26 @@ export const Article = ({}: Props) => {
           placeholder="제목"
         />
         <div className="font-bold">Content :</div>
+        <div className='h-full relative'>
         <textarea
-          className="resize-none h-full article-input"
+          className="resize-none h-[93%] article-input"
           {...register('content')}
           name="content"
           value={article.content || ''}
           onChange={handleInputChange}
           placeholder="내용"
-        />
+          />
+          {!selectedLeaf.leaf_id &&
+            <div>
+            <img src='/images/icons/gptLogo.png'
+            className='cursor-pointer transform hover:scale-110 hover:shadow-sm absolute -bottom-[3.8rem] md:right-5 md:bottom-8'
+            onClick={handleServePrompt}
+            />
+            {/* <div></div> try! */}
+          </div> 
+          }
+        </div>
         <div className="flex flex-row place-self-end gap-3">
-          {!selectedLeaf.leaf_id && <button className='bamboo-button relative left-0' 
-          onClick={(e)=>handleServePrompt(e)
-          }>Try!</button>}
           {!selectedLeaf.leaf_id && (
             <div
               className={`bamboo-button w-20 min-h-full flex justify-center items-center hover:bg-red-600 ${

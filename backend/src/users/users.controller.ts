@@ -115,7 +115,7 @@ export class UsersController {
 
   @Post('gpt/call')
   async callGpt(@Body() body){
-    console.log(body)
+    // console.log(body)
     return await this.gptService.callGpt(body.userPrompt, body.prevCode)
   }
 }

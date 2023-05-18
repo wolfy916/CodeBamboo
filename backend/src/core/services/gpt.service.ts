@@ -29,19 +29,12 @@ export class GptService {
       temperature: 0,
     });
     const answer = response.data.choices[0].text
-    console.log('answer: ', answer)
-
+    // console.log('answer: ', answer)
     return { 
       answer
     };
   } catch (error) {
     console.log(error) 
   }
-  }
-
-  async viewModels(){
-    const response = await this.openAIApi.listModels();
-    console.log(response.data)
-    return { result: response.data };
   }
 }
