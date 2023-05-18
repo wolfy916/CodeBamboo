@@ -42,12 +42,12 @@ export const DocsSection = ({ title, contents }: Props) => {
 
   return (
     <section
-      className={`w-full h-[200%] p-4 mb-3 rounded-xl shadow-lg shadow-slate-400 transition-all
+      className={`w-full h-[200%] p-4 mb-3 rounded-xl shadow-lg shadow-slate-400 transition-all bg-[#F2F2F8]
                   md:w-[45%] md:h-[45%] md:p-5 md:mb-0
                   md:hover:scale-105 md:hover:cursor-pointer`}
       onClick={() => setIsClicked((prev) => !prev)}
     >
-      <div className="w-full h-full overflow-y-hidden transition-all shadow-inner shadow-slate-400">
+      <div className="w-full h-full overflow-y-hidden transition-all shadow-inner shadow-slate-400 bg-white">
         {sectionHeader}
         {sectionBody}
       </div>
