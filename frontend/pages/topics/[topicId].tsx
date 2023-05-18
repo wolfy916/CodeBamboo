@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
@@ -13,6 +13,17 @@ import Editor from '@/components/editor/Editor';
 import { Log } from '@/components/editor/Log';
 import authApi from '@/hooks/api/axios.authorization.instance';
 
+export const queryTopicDetailFn = async (topicId: any) => {
+  if (!topicId) return null;
+  try {
+    const response = await authApi.get(`topic/${topicId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 interface Props {}
 
 export const TopicDetail = ({}: Props) => {
@@ -22,34 +33,29 @@ export const TopicDetail = ({}: Props) => {
   const setArticle = useSetRecoilState(articleState);
   const setSelectedLeaf = useSetRecoilState(selectedLeafState);
   const setLeafs = useSetRecoilState(LeafState);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const queryFn = async (topicId: any) => {
-    if (!topicId) return;
-    try {
-      const response = await authApi.get(`topic/${topicId}`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
+  const getTopic = useQuery(
+    ['topic', topicId],
+    () => queryTopicDetailFn(topicId),
+    {
+      onSuccess: (data) => {
+        setCode(data?.bestLeaf.codes);
+        setArticle({
+          title: data?.bestLeaf.title,
+          content: data?.bestLeaf.content,
+        });
+        setSelectedLeaf({
+          user_id: data?.bestLeaf.user_id,
+          leaf_id: data?.bestLeaf.leaf_id,
+        });
+        setLeafs(data?.leafs);
+        setIsLoading(false);
+      },
+      refetchOnWindowFocus: false,
     }
-  };
-
-  const getTopic = useQuery(['topic', topicId], () => queryFn(topicId), {
-    onSuccess: (data) => {
-      setCode(data?.bestLeaf.codes);
-      setArticle({
-        title: data?.bestLeaf.title,
-        content: data?.bestLeaf.content,
-      });
-      setSelectedLeaf({
-        user_id: data?.bestLeaf.user_id,
-        leaf_id: data?.bestLeaf.leaf_id,
-      });
-      setLeafs(data?.leafs);
-    },
-    refetchOnWindowFocus: false,
-  });
-
-  if (getTopic.isLoading) {
+  );
+  if (isLoading) {
     return (
       <div className="flex flex-col w-full h-full justify-center items-center bg-[#69AF9A]">
         <div className="font-scp text-2xl">LOADING...</div>
