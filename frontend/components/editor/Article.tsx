@@ -7,6 +7,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import authApi from '@/hooks/api/axios.authorization.instance';
 import { GrFlagFill } from 'react-icons/gr';
 import { loginModalState, userState } from '@/recoil/user';
+import { CodeObject } from '@/recoil/topic';
 
 interface Props {}
 
@@ -43,9 +44,9 @@ export const Article = ({}: Props) => {
   const [article, setArticle] = useRecoilState(articleState);
   const user = useRecoilValue(userState);
   const code = useRecoilValue(codeState);
+  const setCode = useSetRecoilState(codeState)
   const selectedLeaf = useRecoilValue(selectedLeafState);
   const setIsOpen = useSetRecoilState(loginModalState);
-  const [localArticle, setLocalArticle] = useState(article);
   const [needHelp, setNeedHelp] = useState(false);
   const {
     register,
@@ -85,10 +86,6 @@ export const Article = ({}: Props) => {
     mutateLeafEdit.mutate(body)
   }
 
-  useEffect(() => {
-    setLocalArticle(article);
-  }, [article]);
-
   const onSubmit = (data: any) => {
     if (!user.isLoggedIn) {
       setIsOpen((prev) => !prev);
@@ -121,11 +118,42 @@ export const Article = ({}: Props) => {
   const handleInputChange = useCallback(
     (event: { target: { name: string; value: string } }) => {
       const { name, value } = event?.target;
-      setLocalArticle((prev) => ({ ...prev, [name]: value }));
       setArticle((prev) => ({ ...prev, [name]: value }));
     },
     [setArticle]
   );
+
+  const userPrompt = article.content
+  console.log(userPrompt)
+  const servePromptMutation = useMutation(()=>authApi.post('user/gpt/call', {userPrompt}), {
+    onSuccess:(data)=>{
+      const rst = data.data.answer
+      console.log('rst: ', rst)
+
+      const convertedData = JSON.parse(rst)
+      const gptCode = []
+
+      for (const key in convertedData) {
+        const value = convertedData[key]
+        const codeForm = {
+          code_id: null,
+          language: key,
+          content: value
+        }
+        gptCode.push(codeForm)
+      }
+
+      setCode(gptCode)
+      console.log(gptCode)
+      console.log('code: ', code)
+    }
+
+  })
+
+  const handleServePrompt = (e:any)=>{
+    servePromptMutation.mutate()
+    e.preventDefault()
+  }
 
   return (
     <div className="flex p-4 bg-inherit h-1/2">
@@ -142,7 +170,7 @@ export const Article = ({}: Props) => {
           {...register('title', { required: true, maxLength: 100 })}
           type="text"
           name="title"
-          value={localArticle.title}
+          value={article.title}
           onChange={handleInputChange}
           placeholder="제목"
         />
@@ -151,12 +179,14 @@ export const Article = ({}: Props) => {
           className="resize-none h-full article-input"
           {...register('content')}
           name="content"
-          value={localArticle.content || ''}
+          value={article.content || ''}
           onChange={handleInputChange}
           placeholder="내용"
         />
         <div className="flex flex-row place-self-end gap-3">
-          {!selectedLeaf.leaf_id && <button className='bamboo-button relative left-0'>Try!</button>}
+          {!selectedLeaf.leaf_id && <button className='bamboo-button relative left-0' 
+          onClick={(e)=>handleServePrompt(e)
+          }>Try!</button>}
           {!selectedLeaf.leaf_id && (
             <div
               className={`bamboo-button w-20 min-h-full flex justify-center items-center hover:bg-red-600 ${
