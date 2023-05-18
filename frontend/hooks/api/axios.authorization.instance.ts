@@ -3,7 +3,7 @@ import useAuthInterceptor from './useAuthInterceptor';
 
 // 1. BASEURL 설정
 const authApi: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8000/',
+  baseURL: 'https://k8a801.p.ssafy.io/api/',
   withCredentials: true,
 });
 
