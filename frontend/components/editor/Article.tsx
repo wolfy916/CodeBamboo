@@ -8,6 +8,7 @@ import authApi from '@/hooks/api/axios.authorization.instance';
 import { GrFlagFill } from 'react-icons/gr';
 import { loginModalState, userState } from '@/recoil/user';
 import { queryTopicDetailFn } from '@/pages/topics/[topicId]';
+import Dialog from '../common/Dialog';
 
 interface Props {}
 
@@ -56,8 +57,9 @@ export const Article = ({}: Props) => {
   const setLeafs = useSetRecoilState(LeafState)
   const [selectedLeaf, setSelectedLeaf] = useRecoilState(selectedLeafState);
   const setIsOpen = useSetRecoilState(loginModalState);
-  const [localArticle, setLocalArticle] = useState(article);
   const [needHelp, setNeedHelp] = useState(false);
+  const [gptLoading, setGptLoading] = useState(false)
+
   const {
     register,
     formState: { errors },
@@ -137,10 +139,6 @@ export const Article = ({}: Props) => {
     }
   }
 
-  useEffect(() => {
-    setLocalArticle(article);
-  }, [article]);
-
   const onSubmit = (data: any) => {
     if (!user.isLoggedIn) {
       setIsOpen((prev) => !prev);
@@ -173,11 +171,43 @@ export const Article = ({}: Props) => {
   const handleInputChange = useCallback(
     (event: { target: { name: string; value: string } }) => {
       const { name, value } = event?.target;
-      setLocalArticle((prev) => ({ ...prev, [name]: value }));
       setArticle((prev) => ({ ...prev, [name]: value }));
     },
     [setArticle]
   );
+
+  const userPrompt = article.content
+  const servePromptMutation = useMutation(()=>authApi.post('user/gpt/call', {userPrompt}), {
+    onSuccess:(data)=>{
+      const rst = data.data.answer
+      const convertedData = JSON.parse(rst)
+      const gptCode = []
+
+      for (const key in convertedData) {
+        const value = convertedData[key]
+        const codeForm = {
+          code_id: null,
+          language: key,
+          content: value
+        }
+        gptCode.push(codeForm)
+      }
+      setCode(gptCode)
+    },
+  })
+  const handleServePrompt = ()=>{
+    servePromptMutation.mutate()
+    // e.preventDefault()
+  }
+
+  useEffect(()=>{
+    if (servePromptMutation.isLoading) {
+      setGptLoading(true)
+    }
+    if (!servePromptMutation.isLoading) {
+      setTimeout(()=>setGptLoading(false), 1000) 
+    }
+  }, [servePromptMutation.isLoading])
 
   return (
     <div className="flex p-4 bg-inherit h-1/2">
@@ -194,19 +224,30 @@ export const Article = ({}: Props) => {
           {...register('title', { required: true, maxLength: 100 })}
           type="text"
           name="title"
-          value={localArticle.title || ''}
+          value={article?.title || ''}
           onChange={handleInputChange}
           placeholder="제목"
         />
         <div className="font-bold">Content :</div>
+        <div className='h-full relative'>
         <textarea
-          className="resize-none h-full article-input"
+          className="resize-none h-[93%] article-input"
           {...register('content')}
           name="content"
-          value={localArticle.content || ''}
+          value={article?.content || ''}
           onChange={handleInputChange}
           placeholder="내용"
-        />
+          />
+          {!selectedLeaf.leaf_id &&
+            <div>
+            <img src='/images/icons/gptLogo.png'
+            className='cursor-pointer transform hover:scale-110 hover:shadow-sm absolute -bottom-[3.8rem] md:right-5 md:bottom-8'
+            onClick={handleServePrompt}
+            />
+            {/* <div></div> try! */}
+          </div> 
+          }
+        </div>
         <div className="flex flex-row place-self-end gap-3">
           {!selectedLeaf.leaf_id && (
             <div
@@ -235,6 +276,7 @@ export const Article = ({}: Props) => {
           </button>
         </div>
       </form>
+      {gptLoading && <Dialog fail={false} context='컴포넌트를 작성하는 중입니다...'/>}
     </div>
   );
 };
