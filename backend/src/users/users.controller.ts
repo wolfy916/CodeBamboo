@@ -12,17 +12,20 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { SimpleUserDto } from './dto/simple.user.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadedFile, UseInterceptors } from '@nestjs/common/decorators';
 import { memoryStorage } from 'multer';
 import { Public } from 'src/auth/utils/public.decorator';
+import { GptService } from 'src/core/services/gpt.service';
 
 @Controller('user')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private gptService: GptService
+    ) {}
 
   // [#] 테스트용 코드
   // @Get()
@@ -108,5 +111,11 @@ export class UsersController {
   update(@Req() req: Request, @Body() userInput: any, @UploadedFile() profileImg) {
     // console.log('img : ', profileImg)
     return this.usersService.update(req.user['user_id'], userInput, profileImg);
+  }
+
+  @Post('gpt/call')
+  async callGpt(@Body() Body){
+    console.log(Body)
+    return await this.gptService.callGpt()
   }
 }

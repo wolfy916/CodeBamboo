@@ -156,6 +156,7 @@ export const Article = ({}: Props) => {
           placeholder="내용"
         />
         <div className="flex flex-row place-self-end gap-3">
+          {!selectedLeaf.leaf_id && <button className='bamboo-button relative left-0'>Try!</button>}
           {!selectedLeaf.leaf_id && (
             <div
               className={`bamboo-button w-20 min-h-full flex justify-center items-center hover:bg-red-600 ${
