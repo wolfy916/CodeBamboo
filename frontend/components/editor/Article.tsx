@@ -191,9 +191,9 @@ export const Article = ({}: Props) => {
         gptCode.push(codeForm)
       }
       setCode(gptCode)
-    }
+    },
   })
-
+  console.log(servePromptMutation)
   const handleServePrompt = ()=>{
     servePromptMutation.mutate()
     // e.preventDefault()
