@@ -50,7 +50,7 @@ const queryLeafDeleteFn = async (leafId:number|null) => {
 
 export const Article = ({}: Props) => {
   const router = useRouter();
-  const topicId = router.query.topicId;
+  const topicId = router.query.topicId as string
   const [article, setArticle] = useRecoilState(articleState);
   const user = useRecoilValue(userState);
   const [code, setCode] = useRecoilState(codeState);
