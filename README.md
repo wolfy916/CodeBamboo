@@ -4,7 +4,7 @@
 
 ---
 
-![Untitled](https://github.com/irang6v6/CALMWAVE/assets/42470768/bde4ba5d-4d01-43c2-82b7-24d2631b60b4)
+![Untitled](https://github.com/irang6v6/CALMWAVE/assets/42470768/6345e5d5-be70-49ab-9829-9ec7e1e2f639)
 
 ## 💡 Code Bamboo **소개**
 
