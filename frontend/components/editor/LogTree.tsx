@@ -2,7 +2,6 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { LeafObject, LeafState } from '@/recoil/topic';
 import { LeafItem } from './LeafItem';
-import { BiArrowFromRight } from 'react-icons/bi'
 
 export interface LeafNode extends LeafObject {
   children?: LeafNode[];
@@ -57,8 +56,10 @@ export const LogTree = ({setIsTreeOpen}: Props) => {
     w-full 
     md:w-[45%]"
     >
-      <BiArrowFromRight
-        className='z-20 absolute top-3 right-3 w-16 h-16 cursor-pointer'
+      <img src='/images/prev.png'
+        className='z-20 absolute top-3 right-3 w-12 h-12 cursor-pointer
+        md:w-10 md:h-10
+        '
         onClick={()=>setIsTreeOpen(false)}/>
       {renderLogTree(LogTree)}
     </div>

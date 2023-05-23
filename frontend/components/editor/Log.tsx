@@ -35,11 +35,16 @@ export const Log = () => {
                   md:static md:w-full md:max-w-xs"
       >
         <div className="flex flex-row mr-3 mt-4 cursor-pointer gap-5">
-          <span
-            className='mr-auto ml-3'
-            onClick={() => setIsTreeOpen(true)}>
-            로그 트리
-          </span>
+          <div className='ml-3 hover:scale-110 flex flex-row mr-auto hover:font-bold'>
+            {!isMobile &&
+            <GrTree size={20}/>
+            }
+            <span
+              className='ml-1 font-semibold'
+              onClick={() => setIsTreeOpen(true)}>
+              로그 트리
+            </span>
+          </div>
           <span
             className={`border-b-4 ${
               isTimeline ? 'font-semibold border-lime-300' : 'border-none'
@@ -79,10 +84,10 @@ export const Log = () => {
       {isMobile ? (
         !isLogOpen ? (
           <div
-            className="flex justify-center items-center bg-white rounded-full h-20 w-20 fixed left-8 bottom-10 border-4 border-bamboo"
+            className="flex justify-center items-center bg-white rounded-full h-16 w-16 fixed left-5 bottom-5 border-4 border-bamboo"
             onClick={() => setIsLogOpen(true)}
           >
-            <GrTree className="text-[3rem] text-white" />
+            <GrTree className="text-[3rem] text-white" size={37}/>
           </div>
         ) : (
           <>
