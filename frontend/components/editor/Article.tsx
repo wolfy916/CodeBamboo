@@ -15,6 +15,7 @@ import { GrFlagFill } from 'react-icons/gr';
 import { loginModalState, userState } from '@/recoil/user';
 import { queryTopicDetailFn } from '@/pages/topics/[topicId]';
 import Dialog from '../common/Dialog';
+import useIsMobile from '@/hooks/useIsMobile';
 
 interface Props {}
 
@@ -67,6 +68,7 @@ export const Article = ({}: Props) => {
   const [gptLoading, setGptLoading] = useState(false);
   const [gptFail, setGptFail] = useState(false);
   const setGptTrigger = useSetRecoilState(gptTrigger);
+  const isMobile = useIsMobile()
 
   const {
     register,
@@ -257,7 +259,7 @@ export const Article = ({}: Props) => {
           placeholder="제목"
         />
         <div className="font-bold">Content :</div>
-        <div className="h-full relative">
+        <div className="h-full relative group">
           <textarea
             className="resize-none h-[93%] article-input"
             {...register('content')}
@@ -267,14 +269,20 @@ export const Article = ({}: Props) => {
             placeholder="내용"
           />
           {!selectedLeaf.leaf_id && (
-            <div>
+            <div className="relative">
               <img
                 src="/images/icons/gptLogo.png"
-                className="cursor-pointer transform hover:scale-110 hover:shadow-sm absolute -bottom-[3.8rem] md:right-5 md:bottom-8"
+                className="absolute cursor-pointer hover:scale-110 z-20 hover:shadow-md -bottom-[2.9rem] md:right-5 md:bottom-8 rounded-2xl"
                 onClick={handleServePrompt}
               />
-              {/* <div></div> try! */}
-            </div>
+              {!isMobile &&
+              <div className="absolute w-32 text-center bg-black text-white
+              text-sm rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100
+              md:-right-3 md:bottom-[6.5rem]">
+                Click to generate!
+              </div>
+              }
+           </div>
           )}
         </div>
         <div className="flex flex-row w-full justify-between">
@@ -299,7 +307,7 @@ export const Article = ({}: Props) => {
                 {!needHelp ? `Help!` : <GrFlagFill />}
               </div>
             )}
-            {selectedLeaf.user_id === user.user_id && (
+            {selectedLeaf.user_id && selectedLeaf.user_id === user.user_id && (
               <div
                 className="bamboo-button bg-rose-500 hover:bg-red-600"
                 onClick={() => DeleteLeaf()}
@@ -307,7 +315,7 @@ export const Article = ({}: Props) => {
                 Delete
               </div>
             )}
-            {selectedLeaf.user_id === user.user_id && (
+            {selectedLeaf.user_id && selectedLeaf.user_id === user.user_id && (
               <div className="bamboo-button" onClick={() => EditLeaf()}>
                 Edit
               </div>
