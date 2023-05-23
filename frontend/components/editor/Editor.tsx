@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { codeState, selectedLeafState } from '@/recoil/topic';
+import { codeState, gptTrigger, selectedLeafState } from '@/recoil/topic';
 import { UnControlled as CodeItem } from 'react-codemirror2';
-import { isBrowser } from 'browser-or-node';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
 import { Rendering } from './Rendering';
 import { Article } from './Article';
 import useIsMobile from '@/hooks/useIsMobile';
 import useIsClient from '@/hooks/useIsClient';
-
-if (isBrowser) {
-  require('codemirror/mode/xml/xml');
-  require('codemirror/mode/css/css');
-  require('codemirror/mode/javascript/javascript');
-}
 
 export const Editor = () => {
   const [code, setCode] = useRecoilState(codeState);
@@ -23,9 +14,10 @@ export const Editor = () => {
   const isClient = useIsClient();
   const [selectedLanguage, setSelectedLanguage] = useState('HTML');
   const [initialCode, setInitialCode] = useState('');
+  const codeUpdateTrigger = useRecoilValue(gptTrigger) 
 
   const mode: any = {
-    HTML: 'xml',
+    HTML: 'htmlmixed',
     CSS: 'css',
     JavaScript: 'javascript',
   };
@@ -41,7 +33,7 @@ export const Editor = () => {
       (e) => e.language === selectedLanguage
     )?.content;
     setInitialCode(selectedCode || '');
-  }, [selectedLanguage, selectedLeaf]);
+  }, [selectedLanguage, selectedLeaf, codeUpdateTrigger]);
 
   const handleChange = (editor: any, data: any, value: string) => {
     const selectedCodeIndex = code.findIndex(
@@ -54,13 +46,6 @@ export const Editor = () => {
     };
     setCode(updatedCode);
   };
-
-  useEffect(()=>{
-    const selectedCode = code.find(
-      (e) => e.language === selectedLanguage
-    )?.content;
-    setInitialCode(selectedCode)
-  },[code])
 
   const Tabs = () => {
     const languageOrder = ['HTML', 'CSS', 'JavaScript'];
