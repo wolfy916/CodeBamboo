@@ -1,26 +1,26 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useMutation } from 'react-query';
-import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
+import React, { useState, useCallback, useEffect } from "react";
+import { useMutation } from "react-query";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
 import {
   LeafState,
   articleState,
   codeState,
   gptTrigger,
   selectedLeafState,
-} from '@/recoil/topic';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import authApi from '@/hooks/api/axios.authorization.instance';
-import { GrFlagFill } from 'react-icons/gr';
-import { loginModalState, userState } from '@/recoil/user';
-import { queryTopicDetailFn } from '@/pages/topics/[topicId]';
-import Dialog from '../common/Dialog';
+} from "@/recoil/topic";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import authApi from "@/hooks/api/axios.authorization.instance";
+import { GrFlagFill } from "react-icons/gr";
+import { loginModalState, userState } from "@/recoil/user";
+import { queryTopicDetailFn } from "@/pages/topics/[topicId]";
+import Dialog from "../common/Dialog";
 
 interface Props {}
 
 const queryTopicFn = async (body: any) => {
   try {
-    const response = await authApi.post('topic/', body);
+    const response = await authApi.post("topic/", body);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -29,7 +29,7 @@ const queryTopicFn = async (body: any) => {
 
 const queryLeafFn = async (body: any) => {
   try {
-    const response = await authApi.post('leaf/', body);
+    const response = await authApi.post("leaf/", body);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -75,8 +75,8 @@ export const Article = ({}: Props) => {
     handleSubmit,
   } = useForm({
     defaultValues: {
-      title: article.title || '',
-      content: article.content || '',
+      title: article.title || "",
+      content: article.content || "",
     },
   });
 
@@ -149,7 +149,7 @@ export const Article = ({}: Props) => {
   };
 
   const DeleteLeaf = () => {
-    if (window.confirm('정말로 삭제하시겠습니까?')) {
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
       mutateLeafDelete.mutate();
     }
   };
@@ -193,10 +193,10 @@ export const Article = ({}: Props) => {
 
   // gpt 호출
   const userPrompt = article.content;
-  const prevCode = '';
+  const prevCode = "";
   const servePromptMutation = useMutation(
     () =>
-      authApi.post('user/gpt/call', { userPrompt, prevCode: prevCode || null }),
+      authApi.post("user/gpt/call", { userPrompt, prevCode: prevCode || null }),
     {
       onSuccess: (data) => {
         const rst = data.data.answer;
@@ -241,18 +241,18 @@ export const Article = ({}: Props) => {
     <div className="flex p-4 bg-inherit h-1/2">
       <form className="flex flex-col w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="font-bold">
-          Title :{' '}
+          Title :{" "}
           <span className="text-red-500">
-            {errors.title?.type === 'required' && '제목을 입력하시길 바랍니다.'}
+            {errors.title?.type === "required" && "제목을 입력하시길 바랍니다."}
           </span>
         </div>
         <input
           className="h-8 max-w-md article-input"
           maxLength={100}
-          {...register('title', { required: true, maxLength: 100 })}
+          {...register("title", { required: true, maxLength: 100 })}
           type="text"
           name="title"
-          value={article?.title || ''}
+          value={article?.title || ""}
           onChange={handleInputChange}
           placeholder="제목"
         />
@@ -260,25 +260,26 @@ export const Article = ({}: Props) => {
         <div className="h-full relative">
           <textarea
             className="resize-none h-[93%] article-input"
-            {...register('content')}
+            {...register("content")}
             name="content"
-            value={article?.content || ''}
+            value={article?.content || ""}
             onChange={handleInputChange}
             placeholder="내용"
           />
           {!selectedLeaf.leaf_id && (
-            <div>
+            <div className="group relative">
               <img
                 src="/images/icons/gptLogo.png"
-                className="cursor-pointer transform hover:scale-110 hover:shadow-sm absolute -bottom-[3.8rem] md:right-5 md:bottom-8"
-                onClick={handleServePrompt}
+                className="absolute cursor-pointer hover:scale-110 hover:shadow-md -bottom-[2.9rem] md:right-5 md:bottom-8 rounded-2xl"
               />
-              {/* <div></div> try! */}
+              <div className="absolute w-32 text-center bg-black text-white text-sm rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100 md:-right-3 md:bottom-[6.5rem]">
+                Click to generate!
+              </div>
             </div>
           )}
         </div>
         <div className="flex flex-row w-full justify-between">
-          <div className='flex items-center'>
+          <div className="flex items-center">
             {selectedLeaf.leaf_id && (
               <div
                 onClick={() => router.push(`/users/${selectedLeaf.user_id}`)}
@@ -286,20 +287,20 @@ export const Article = ({}: Props) => {
               >
                 created by {selectedLeaf.nickname}
               </div>
-            )}       
+            )}
           </div>
-          <div className='flex flex-row gap-3'>
+          <div className="flex flex-row gap-3">
             {!selectedLeaf.leaf_id && (
               <div
                 className={`bamboo-button w-20 min-h-full flex justify-center items-center hover:bg-red-600 ${
-                  !needHelp ? 'bg-rose-300' : 'bg-rose-500 shadow-inner'
+                  !needHelp ? "bg-rose-300" : "bg-rose-500 shadow-inner"
                 }`}
                 onClick={() => setNeedHelp((prev) => !prev)}
               >
                 {!needHelp ? `Help!` : <GrFlagFill />}
               </div>
             )}
-            {selectedLeaf.user_id === user.user_id && (
+            {selectedLeaf.user_id && selectedLeaf.user_id === user.user_id && (
               <div
                 className="bamboo-button bg-rose-500 hover:bg-red-600"
                 onClick={() => DeleteLeaf()}
@@ -307,13 +308,13 @@ export const Article = ({}: Props) => {
                 Delete
               </div>
             )}
-            {selectedLeaf.user_id === user.user_id && (
+            {selectedLeaf.user_id && selectedLeaf.user_id === user.user_id && (
               <div className="bamboo-button" onClick={() => EditLeaf()}>
                 Edit
               </div>
             )}
             <button className="bamboo-button">
-              {!selectedLeaf.leaf_id ? 'Submit' : 'Reply'}
+              {!selectedLeaf.leaf_id ? "Submit" : "Reply"}
             </button>
           </div>
         </div>
