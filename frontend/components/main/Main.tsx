@@ -23,18 +23,18 @@ export default function Main() {
       {isClient && isMobile && <div className="w-full h-20"></div>}
       <div
         className="m-5 mb-0 pl-5 pb-5 border-b-gray-600 border-b-2
-                  text-3xl
+                  text-3xl font-bold md:font-extrabold 
                   md:mx-20 md:mt-7 md:text-4xl"
       >
-        <span className='font-bold'>Popular</span>
+        Popular
       </div>
       <TopicList topicList={mainTopicList.popular} />
       <div
         className="m-5 mb-0 pl-5 pb-5 border-b-gray-600 border-b-2
-                  text-3xl
+                  text-3xl font-bold md:font-extrabold 
                   md:mx-20 md:mt-14 md:text-4xl"
       >
-        <span className='font-bold'>Trending</span>
+        Trending
       </div>
       <TopicList topicList={mainTopicList.trending} />
     </div>
