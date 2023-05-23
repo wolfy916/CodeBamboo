@@ -26,7 +26,7 @@ export default function Main() {
                   text-3xl
                   md:mx-20 md:mt-7 md:text-4xl"
       >
-        Popular
+        <span className='font-bold'>Popular</span>
       </div>
       <TopicList topicList={mainTopicList.popular} />
       <div
@@ -34,7 +34,7 @@ export default function Main() {
                   text-3xl
                   md:mx-20 md:mt-14 md:text-4xl"
       >
-        Trending
+        <span className='font-bold'>Trending</span>
       </div>
       <TopicList topicList={mainTopicList.trending} />
     </div>
