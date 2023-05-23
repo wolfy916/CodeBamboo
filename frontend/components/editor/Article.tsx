@@ -1,20 +1,14 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { useMutation } from "react-query";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/router";
-import {
-  LeafState,
-  articleState,
-  codeState,
-  gptTrigger,
-  selectedLeafState,
-} from "@/recoil/topic";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import authApi from "@/hooks/api/axios.authorization.instance";
-import { GrFlagFill } from "react-icons/gr";
-import { loginModalState, userState } from "@/recoil/user";
-import { queryTopicDetailFn } from "@/pages/topics/[topicId]";
-import Dialog from "../common/Dialog";
+import React, { useState, useCallback, useEffect } from 'react';
+import { useMutation } from 'react-query';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
+import { LeafState, articleState, codeState, gptTrigger, selectedLeafState } from '@/recoil/topic';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import authApi from '@/hooks/api/axios.authorization.instance';
+import { GrFlagFill } from 'react-icons/gr';
+import { loginModalState, userState } from '@/recoil/user';
+import { queryTopicDetailFn } from '@/pages/topics/[topicId]';
+import Dialog from '../common/Dialog';
 
 interface Props {}
 
@@ -64,9 +58,9 @@ export const Article = ({}: Props) => {
   const [selectedLeaf, setSelectedLeaf] = useRecoilState(selectedLeafState);
   const setIsOpen = useSetRecoilState(loginModalState);
   const [needHelp, setNeedHelp] = useState(false);
-  const [gptLoading, setGptLoading] = useState(false);
-  const [gptFail, setGptFail] = useState(false);
-  const setGptTrigger = useSetRecoilState(gptTrigger);
+  const [gptLoading, setGptLoading] = useState(false)
+  const [gptFail, setGptFail] = useState(false)
+  const setGptTrigger = useSetRecoilState(gptTrigger)
 
   const {
     register,
@@ -212,17 +206,20 @@ export const Article = ({}: Props) => {
           };
           gptCode.push(codeForm);
         }
-        setCode(gptCode);
-        setGptTrigger((prev) => !prev);
-      },
-      onError: () => {
-        setGptFail(true);
-        setTimeout(() => {
-          setGptFail(false);
-        }, 3000);
-      },
+        console.log(gptCode)
+        setCode(gptCode)
+        setGptTrigger(prev=>!prev)
+        // console.log('code: ', code)
+    },
+    onError:()=>{
+        setGptFail(true)
+        setTimeout(()=>{setGptFail(false)},3000)
     }
-  );
+  })
+  
+  const handleServePrompt = ()=>{
+    servePromptMutation.mutate()
+  }
 
   const handleServePrompt = () => {
     servePromptMutation.mutate();
