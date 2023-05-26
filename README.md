@@ -6,6 +6,7 @@
 
 ![Untitled](https://github.com/irang6v6/CALMWAVE/assets/42470768/6345e5d5-be70-49ab-9829-9ec7e1e2f639)
 
+
 ## 💡 Code Bamboo **소개**
 
 - 프런트엔드 코드 커뮤니티에서 자유롭게 질문하고 답변하며 유저들의 코드를 감상해요
@@ -16,7 +17,9 @@
 
 https://youtu.be/C7BFGnSYkW8
 
+
 ## 📅 **프로젝트 진행 기간**
+
 
 **2023/4/10(월) ~ 2023/5/26(금)**
 SSAFY 8기 2학기 자율프로젝트
@@ -25,31 +28,31 @@ SSAFY 8기 2학기 자율프로젝트
 
 ### **메인 페이지**
 
-![main2.gif](exec/img/main2.gif)
+![main2.gif](exec/img/intro.gif)
 
 ### CodeBamboo 소개 페이지
 
-![info](https://github.com/irang6v6/CALMWAVE/assets/42470768/dd8dac68-6338-4ad9-a939-df409850d353)
+![info](exec/img/info.gif))
 
 ### **로그인 페이지**
 
-![login](https://github.com/irang6v6/CALMWAVE/assets/42470768/651b27b7-d167-4346-a63f-adfa677151ce)
+![login](exec/img/login.gif))
 
 ### 토픽 생성, ChatGPT
 
-![main2.gif](exec/img/create.gif)
+![main2.gif](exec/img/gpt.gif)
 
 ### 로그 트리
 
-![main2.gif](exec/img/tree.gif)
+![main2.gif](exec/img/treee.gif)
 
 ### 추천, 북마크
 
-![bookmark](https://github.com/irang6v6/CALMWAVE/assets/42470768/a66b6b4c-6342-4df2-9569-f78a1ab58896)
+![bookmark](exec/img/like.gif)
 
 ### 검색페이지
 
-![main2.gif](exec/img/search.gif)
+![main2.gif](exec/img/search2.gif)
 
 ### 귀여운 로딩창
 
@@ -80,7 +83,7 @@ SSAFY 8기 2학기 자율프로젝트
 
 ![Untitled 4](https://github.com/irang6v6/CALMWAVE/assets/42470768/d295afec-22b7-449b-a110-674c5733ed8e)
 
-## 📚 **프로젝트 산출물**
+
 
 ## 👥 **팀원 역할 분배**
 
